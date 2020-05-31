@@ -784,6 +784,9 @@ npm install --save redux react-redux
 	The `mapStateToProps` and `mapDispatchToProps` deals with your Redux store’s state and dispatch, respectively. state and dispatch will be supplied to your mapStateToProps or mapDispatchToProps functions as the first argument.
 	
 	The return of `connect()` is a __wrapper function__ that takes your component and returns a __wrapper component__ with the additional props it injects.
+	
+	- `mapStateToProps?: (state, ownProps?) => Object` : it can take all Redux store’s states and components props__(optional)__ as well.
+	- `mapDispatchToProps?: Object | (dispatch, ownProps?) => Object` : it can be directly an object which contains actionCreators or like `mapStateToProps` it can be function which takes dispatch and components props__(optional)__ as well.
 
 
 ### React and Redux How we need to configure ?
@@ -938,7 +941,8 @@ Asynchronous Action Creator: Takes some amount of time for it get its data ready
 ### Implementing thunk in React app
 
 Index file should create store with applyMiddleware and thunk
-```JavaScript
+
+```javascript
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
@@ -958,7 +962,8 @@ ReactDOM.render(
 ```
 
 Action should return a function which is dispatching our plain object
-```JavaScript
+
+```javascript
 export const fetchPost = () => async dispatch => {
     const promise = await jsonPlaceholder.get('/posts');
     dispatch({type: "FETCH_POST", payload: promise});
@@ -966,39 +971,68 @@ export const fetchPost = () => async dispatch => {
 ```
 
 ### NOTES
-That lots of arrow function
-```JavaScript
-export const fetchPost = () => async dispatch => {
-    const promise = await jsonPlaceholder.get('/posts');
-    dispatch({type: "FETCH_POST", payload: promise});
-};
-```
-means
-```JavaScript
-export const fetchPost = () => {
-    return async dispatch => {
-        const promise = await jsonPlaceholder.get('/posts');
-        dispatch({type: "FETCH_POST", payload: promise});
-    };
-};
-```
-and that means
-```JavaScript
-export const fetchPost = () => {
-    return async function(dispatch) {
-        const promise = await jsonPlaceholder.get('/posts');
-        dispatch({type: "FETCH_POST", payload: promise});
-    };
-};
-```
+- Arrow Function : <br/>
+	__That lots of arrow function__
+
+	```javascript
+	export const fetchPost = () => async dispatch => {
+	    const promise = await jsonPlaceholder.get('/posts');
+	    dispatch({type: "FETCH_POST", payload: promise});
+	};
+	```
+	
+	__means__
+	
+	```javascript
+	export const fetchPost = () => {
+	    return async dispatch => {
+	        const promise = await jsonPlaceholder.get('/posts');
+	        dispatch({type: "FETCH_POST", payload: promise});
+	    };
+	};
+	```
+	
+	__and that means__
+	
+	```javascript
+	export const fetchPost = () => {
+	    return async function(dispatch) {
+	        const promise = await jsonPlaceholder.get('/posts');
+	        dispatch({type: "FETCH_POST", payload: promise});
+	    };
+	};
+	```
+
+- Exact code of redux-thunk :D
+	
+	```javascript
+	function createThunkMiddleware(extraArgument) {
+		return ({ dispatch, getState }) => (next) => (action) => {
+			if (typeof action === 'function') {
+				return action(dispatch, getState, extraArgument);
+			}
+			
+			return next(action);
+		};
+	}
+	
+	const thunk = createThunkMiddleware();
+	thunk.withExtraArgument = createThunkMiddleware;
+	
+	export default thunk;
+	```
+	
 
 ## SECTION 15
 ### Rules of Reducers
 
+- When react application runs with redux, all reducers called with undefined first time. That means all default values setted up at the beginning.
 - Must return any value besides 'undefined'
 - Produces 'state', or data to be used inside of your app using only previous state and the action (reducers are pure)
 - Must not return to react 'out of itself' to decide what value to return
-![ReducerMustBePure](ReactNoteImages/06_ReducerMustBePure.png)
+
+	![ReducerMustBePure](ReactNoteImages/06_ReducerMustBePure.png)
+	
 - Must not mutate its input 'state' argument
 
 ```javascript
@@ -1019,16 +1053,9 @@ export default (state, action) => {
 };
 ```
 
-Good way of return new array or an object :
+- Good way of return new array or an object :
 
 ![ChangingArrayOrObjectWithCreatingNewOne](ReactNoteImages/07_ChangingArrayOrObjectWithCreatingNewOne.png)
-
-### NOTES
-- Install lodash library:
-
-```
-npm install --save lodash
-```
 
 ## SECTION 16
 
@@ -1108,3 +1135,13 @@ Only `/`
 | 7 8 9 10    | 07_pics        |
 | 11          | 11_videos      |
 | 13          | 13_songs       |
+| 14 15       | 14_blog        |
+
+
+## EXTRA INFORMATIONS
+
+- Install lodash library: `npm install --save lodash` which is a modern JavaScript utility library delivering modularity, performance & extras. Some lodash informations:
+	- Generally used with `_` (__underscore__)
+	- `_.memoize(func, [resolver])` : Creates a function that memoizes the result of func. If resolver is provided, it determines the cache key for storing the result based on the arguments provided to the memoized function. By default, the first argument provided to the memoized function is used as the map cache key. The func is invoked with the this binding of the memoized function.
+
+	
