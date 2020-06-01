@@ -1,6 +1,6 @@
 # REACT & REDUX CHEAT SHEET
 
-## SECTION 1
+## SECTION 1 - Let's Dive In!
 - INSTALL Create React App Package:
 
 	```
@@ -26,7 +26,7 @@
 ![Component](ReactNoteImages/02_Component.png)
 
 
-## SECTION 2
+## SECTION 2 - Building Content with JSX
 - Babeljs : [Babel Link](https://babeljs.io/)
 - Html Versus JSX :
 	- One difference is between inline style. JSX uses camelcase style <br/>
@@ -54,7 +54,7 @@
 	- Use __htmlFor__ instead of __for__
 
 
-## SECTION 3
+## SECTION 3 - Communication with Props
 - `Props:` Which is a system for passing data from a parent component to a child component. Goal is to customize or configure a child component.<br/>
 
 - Example of props <br/>
@@ -114,7 +114,7 @@
     </SomeWrapperComponent>
 	```
 
-## SECTION 4
+## SECTION 4 -  Structuring Apps with Class-Based Components
 ### Benefits of Class Component:
 - Easier code organization
 - Can use 'state' -> Easier to handle user input
@@ -156,7 +156,7 @@
 	export default SomeComponent;
 	```
 
-## SECTION 5
+## SECTION 5 - State in React Components
 ### Rules of State System in React
 - Only usable with class components (Technically can be used with functional components as well with using the new 'hooks' system)
 - Do __NOT__ confuse props with state
@@ -187,7 +187,7 @@
 	export default SomeComponent;
 	```
 
-## SECTION 6
+## SECTION 6 - Understanding Lifecycle Methods
 ### Component Lifecycle (From Start to End in Time)
 
 ```javascript
@@ -304,7 +304,7 @@ getSnapshotBeforeUpdate()
 	}
 	```
 
-## SECTION 7
+## SECTION 7 - Handling User Input with Forms and Events
 ### Some events:
 - User clicks on something -> ```onClick```
 - User changes text in an input -> ```onChange```
@@ -454,7 +454,7 @@ For given component (for submit of the form - onSubmit function):
 	```
 		
 
-## SECTION 8
+## SECTION 8 - Making API Requests with React
 ### Axios vs Fetch
 - `axios:` standalone 3rd party package (Good library for API Requests)
 
@@ -574,7 +574,7 @@ For given component (for submit of the form - onSubmit function):
 	};
 	```
 
-## SECTION 9
+## SECTION 9 - Building Lists of Records
 ### Create an list object in React:
 
 ```javascript
@@ -606,7 +606,7 @@ const images = props.images.map(({id, description, urls}) => {
 });
 ```
 
-## SECTION 10
+## SECTION 10 - Using Ref's for DOM Access
 ### React Refs:
 - Gives access to a single DOM element
 - We create refs in the constructor, assign them to instance variables, then pass to a particular JSX element as props
@@ -646,7 +646,7 @@ class ImageCard extends React.Component {
 export default ImageCard;
 ```
 
-## SECTION 12
+## SECTION 12 - On We Go...To Redux!
 ### What is Redux?
 
 - State management library
@@ -765,7 +765,7 @@ const numbers = [1, 2, 3];
 // But with ... we are creating brand new array.
 ```
 
-## SECTION 13
+## SECTION 13 - Integrating React with Redux
 ### React-Redux
 
 To install redux and react-redux libraries:
@@ -898,7 +898,7 @@ export default connect(
 - Redux does not automatically detect a function returning an object that is an `action`
 
 
-## SECTION 14
+## SECTION 14 - Async Actions with Redux Thunk
 ### Async Actions with Redux Thunk
 
 ```
@@ -1023,7 +1023,7 @@ export const fetchPost = () => async dispatch => {
 	```
 	
 
-## SECTION 15
+## SECTION 15 - Redux Store Design
 ### Rules of Reducers
 
 - When react application runs with redux, all reducers called with undefined first time. That means all default values setted up at the beginning.
@@ -1057,7 +1057,7 @@ export default (state, action) => {
 
 ![ChangingArrayOrObjectWithCreatingNewOne](ReactNoteImages/07_ChangingArrayOrObjectWithCreatingNewOne.png)
 
-## SECTION 16
+## SECTION 16 - Navigation with React Router
 
 Install react-router-dom:
 
@@ -1083,16 +1083,12 @@ const PageTwo = () => {
 
 
 const App = () => {
-    return (
-        <div>
-            <BrowserRouter>
-                <div>
-                    <Route path='/' exact component={PageOne}/>
-                    <Route path='/pagetwo' component={PageTwo}/>
-                </div>
-            </BrowserRouter>
-        </div>
-    );
+	return (
+		<BrowserRouter>
+			<Route path='/' exact component={PageOne}/>
+			<Route path='/pagetwo' component={PageTwo}/>
+		</BrowserRouter>
+	);
 };
 
 export default App;
@@ -1100,21 +1096,26 @@ export default App;
 
 ### How React Router Works
 
-Paths which are cared by React Router
-![HowReactRouterWorks](ReactNoteImages/09_HowReactRouterWorks.png)
+- Paths which are cared by React Router
 
-Simple Diagram of React Router Works
-![HowReactRouterWorksDiagram](ReactNoteImages/10_HowReactRouterWorksDiagram.png)
+	![HowReactRouterWorks](ReactNoteImages/09_HowReactRouterWorks.png)
+
+- Simple Diagram of React Router Works
+
+	![HowReactRouterWorksDiagram](ReactNoteImages/10_HowReactRouterWorksDiagram.png)
 
 ### How Paths Get Matched
 
 Only `/`
+
 ![RouterPaths01](ReactNoteImages/11_RouterPaths01.png)
 
 `/` and `page`
+
 ![RouterPaths02](ReactNoteImages/12_RouterPaths02.png)
 
 `/` `page` and `5`
+
 ![RouterPaths03](ReactNoteImages/13_RouterPaths03.png)
 
 ### Different Router Types
@@ -1136,6 +1137,7 @@ Only `/`
 | 11          | 11_videos      |
 | 13          | 13_songs       |
 | 14 15       | 14_blog        |
+| 16 17       | 16_streams     |
 
 
 ## EXTRA INFORMATIONS
