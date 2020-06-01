@@ -1130,6 +1130,66 @@ Only `/`
 - Use single element inside a Router element.
 - `<Switch>` looks through all its children `<Route>` elements and renders the first one whose path matches the current URL. Use a `<Switch>` any time you have multiple routes, but you want only one of them to render at a time
 
+## SECTION 17 - Handling Authentication with React
+- Project used client side google authentication. Here is an example component for sign in button of google:
+	
+	```javascript
+	import React from "react";
+		
+	class GoogleAuth extends React.Component {
+		state = {isSignedIn: null}
+			
+		componentDidMount() {
+			window.gapi.load('client:auth2', () => {
+				window.gapi.client.init({
+					clientId: 'YOUR_CLIENT_ID_FOR_AUTH',
+					scope: 'email'
+				}).then(() => {
+					this.auth = window.gapi.auth2.getAuthInstance();
+					this.setState({isSignedIn: this.auth.isSignedIn.get()})
+					this.auth.isSignedIn.listen(() => {
+						this.setState({isSignedIn: this.auth.isSignedIn.get()})
+					})
+				})
+			});
+		}
+			
+		onSignInClicked = () => {
+			this.auth.signIn();
+		}
+			
+		onSignOutClicked = () => {
+			this.auth.signOut();
+		}
+			
+		renderAuthButton() {
+			if (this.state.isSignedIn === null) {
+				return null;
+			} else if (this.state.isSignedIn) {
+				return (
+					<button onClick={this.onSingInClicked} className='ui red google button'>
+						<i className='google icon'/>
+						Sign Out
+					</button>
+				);
+			} else {
+				return (
+					<button onClick={this.onSignOutClicked} className='ui red google button'>
+						<i className='google icon'/>
+						Sign In With Google
+					</button>
+				);
+			}
+		}
+			
+		render() {
+			return this.renderAuthButton();
+		}
+	}
+	
+	export default GoogleAuth;
+	```
+
 ## COURSE PROJECTS
 
 | Sections    | Projects       | 
