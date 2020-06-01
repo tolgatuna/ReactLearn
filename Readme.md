@@ -1085,8 +1085,10 @@ const PageTwo = () => {
 const App = () => {
 	return (
 		<BrowserRouter>
-			<Route path='/' exact component={PageOne}/>
-			<Route path='/pagetwo' component={PageTwo}/>
+			<div>
+				<Route path='/' exact component={PageOne}/>
+				<Route path='/pagetwo' component={PageTwo}/>
+			</div>
 		</BrowserRouter>
 	);
 };
@@ -1125,6 +1127,8 @@ Only `/`
 ### NOTES
 - exact means only display that exactly matched component. On the other hand React will display other components. For example you want to display `/page/5`. If you do not put exact for `/` route, React will display `/` and `/page/5` together. Check the image about `/` `page` and `5`. It is actually matching with all. If you do not put any exact, React will show three elements.
 - Never Use `<a>` tag in react app! (If you use anchor tag in your application, you application will start itself again to go that anchor path!). USE `<Link to='...'>` tag! 
+- Use single element inside a Router element.
+- `<Switch>` looks through all its children `<Route>` elements and renders the first one whose path matches the current URL. Use a `<Switch>` any time you have multiple routes, but you want only one of them to render at a time
 
 ## COURSE PROJECTS
 
