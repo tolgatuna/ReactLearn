@@ -899,16 +899,16 @@ export default connect(
 
 
 ## SECTION 14 - Async Actions with Redux Thunk
-### Async Actions with Redux Thunk
+- Install redux-thunk
 
-```
-npm install --save redux react-redux axios redux-thunk
-```
+	```
+	npm install --save redux react-redux axios redux-thunk
+	```
 
-- redux -> The redux library
-- react-redux -> Integration layer between react and redux
-- axios -> Helps us make network request
-- redux-thunk -> Middleware to help us make request in a redux application
+	- redux __-->__ The redux library
+	- react-redux __-->__ Integration layer between react and redux
+	- axios __-->__ Helps us make network request
+	- redux-thunk __-->__ Middleware to help us make request in a redux application
 
 ### What is Middleware Doing?
 Asynchronous Action Creator: Takes some amount of time for it get its data ready to go
@@ -1059,11 +1059,11 @@ export default (state, action) => {
 
 ## SECTION 16 - Navigation with React Router
 
-Install react-router-dom:
+- Install react-router-dom:
 
-```
-npm install --save react-router-dom
-```
+	```
+	npm install --save react-router-dom
+	```
 
 ![ReactRouterDom](ReactNoteImages/08_ReactRouterDom.png)
 
@@ -1212,21 +1212,209 @@ Only `/`
 		```
 - Debug Session with Redux Dev Tools: `localhost:3000?debug_session=<SOME_STRING>`, with that usage if you refresh you page with same `<SOME_STRING>`, tool will continue from your given session.
 
+## SECTION 19 - Handling Forms with Redux Form
+- Install redux-form:
+
+	```
+	npm install --save redux-form
+	```
+	
+- Documentation: [Redux Form Link](https://redux-form.com/)
+	
+![HandlingInputswithoutRedux](ReactNoteImages/15_HandlingInputswithoutRedux.png)
+
+![16_HandlingInputswithReduxForm](ReactNoteImages/16_HandlingInputswithReduxForm.png)
+
+- To use redux form 
+	- First need to import redux-form reducer with specific name `form` into reducers:
+
+		```javascript
+		import {combineReducers} from 'redux';
+		import {reducer as formReducer} from 'react-form';
+		
+		export default combineReducers({
+			// Other Reducers....
+			form: formReducer,
+			//... Some Other Reducers....
+		})
+		```
+		
+	- Secondly surround component with `reduxForm` function like `connect` function:
+	
+		```javascript
+		import React, {Component} from "react";
+		import {Field, reduxForm} from "redux-form";
+		
+		class MyComponent extends Component {
+			render() {
+				return <div> Will Be Form...</div>;
+			}
+		}
+			
+		export default reduxForm({
+			form: 'GiveANameForYourForm'
+		})(MyComponent);
+		```
+		
+- Simple usage:
+
+	```javascript
+	import React, {Component} from "react";
+	import {Field, reduxForm} from "redux-form";
+		
+	class MyComponent extends Component {
+		renderInput(fieldProps) {
+			return (
+				<input
+					onChange={fieldProps.input.onChange}
+					value={fieldProps.input.value}
+				/>
+			);
+		}
+			
+		render() {
+			return (
+				<form>
+					<Field name='title' component={this.renderInput}/>
+				</form>
+			);
+		}
+	}
+		
+	export default reduxForm({
+		form: 'myComponentForm'
+	})(MyComponent);
+	```
+	
+- Don't need to write `onChange={fieldProps.input.onChange}` and `value={fieldProps.input.value}` manually:
+	
+	```javascript
+	renderInput(fieldProps) {
+		return <input {... fieldProps.input}/>;
+	}
+	```
+	
+	__or more basically__
+	
+	```javascript
+	renderInput({input}) {
+		return <input {...input}/>;
+	}
+	```
+- Don't need to write `event.preventDefault()` for form `submit` :
+	
+	```javascript
+	onSubmit(formValues) {
+		// Directly form values will come.
+	}
+		
+	render() {
+		return (
+			<form conSubmit={this.props.handleSubmit(this.onSubmit)}>
+				// Other fields....
+				<button type="submit">Submit</button>
+			</form>
+		);
+	}
+	```
+- Validation:
+	- Create a validate function and give as parameter to `reduxForm` as `validate`
+	- Returns an errors object. If there is no error return `{}` empty object.
+
+		```javascript
+		const validate = (formValues) => {
+			const errors = {};
+			if (!formValues.fieldName) {
+				errors.fieldName = 'You must enter bla bla ...';
+			}
+			return errors;
+		}
+		
+		export default reduxForm({
+			form: 'MyForm',
+			validate: validate
+		})(StreamCreate);
+		```
+- Full example of simple redux form with validation:
+
+	```javascript
+	import React, {Component} from "react";
+	import {Field, reduxForm} from "redux-form";
+	
+	class MyComponent extends Component {
+		onSubmit(formValues) {
+			console.log('Submitted:', formValues);
+		}
+		
+		renderError = (meta) => {
+			const {error, touched} = meta;
+			if (touched && error) {
+				return (
+					<div>{error}</div>
+				);
+			}
+		}
+		
+		renderInput = ({input, label, meta}) => {
+			return (
+				<div>
+					<label htmlFor={input.name}>{label} : </label>
+					<input id={input.name} {...input} autoComplete='off'/>
+					{this.renderError(meta)}
+				</div>
+			);
+		}
+		
+		render() {
+			return (
+				<form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+					<Field name='myField' component={this.renderInput} label='Enter Value'/>
+					<button type="submit">Submit</button>
+				</form>
+			);
+		}
+	}
+	
+	const validate = (formValues) => {
+		const errors = {};
+		if (!formValues.myField) {
+			errors.myField = 'You must enter a myField value';
+		}
+		return errors;
+	}
+	
+	export default reduxForm({
+		form: 'MyComponentForm',
+		validate: validate
+	})(MyComponent);
+	```
+
 ## COURSE PROJECTS
 
-| Sections    | Projects       | 
-|-------------|----------------|
-| 1 2         | 01_helloworld  |
-| 3           | 03_components  |
-| 4 5 6       | 04_seasons     |
-| 7 8 9 10    | 07_pics        |
-| 11          | 11_videos      |
-| 13          | 13_songs       |
-| 14 15       | 14_blog        |
-| 16 17       | 16_streams     |
+| Sections       | Projects       | 
+|----------------|----------------|
+| 1 2            | 01_helloworld  |
+| 3              | 03_components  |
+| 4 5 6          | 04_seasons     |
+| 7 8 9 10       | 07_pics        |
+| 11             | 11_videos      |
+| 13             | 13_songs       |
+| 14 15          | 14_blog        |
+| 16 17 18 19 20 | 16_streams     |
 
 
 ## EXTRA INFORMATIONS
+- Import everything with name:
+	
+	```javascript
+	import * as Types from './actionTypes'
+	```
+
+- Import a component with different name:
+
+	```javascript
+	import {reducer as formReducer} from 'redux-form'
+	```
 
 - Install lodash library: `npm install --save lodash` which is a modern JavaScript utility library delivering modularity, performance & extras. Some lodash informations:
 	- Generally used with `_` (__underscore__)
