@@ -1189,6 +1189,28 @@ Only `/`
 	
 	export default GoogleAuth;
 	```
+	
+## SECTION 18 - Redux Dev Tool
+- [Redux DevTools](https://github.com/zalmoxisus/redux-devtools-extension/) : In chrome check Home -> Extensions -> Redux DevTools and install __Redux DevTools__
+- To use tool with any react-redux project, need to add given configuration to react-redux app:
+	- import `{applyMiddleware, compose}` from `redux`
+	- create func `const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;`
+	- use `composeEnhancers` function with `composeEnhancers(applyMiddleware())`
+	- Full implementation:
+
+		```javascript
+		import {createStore, applyMiddleware, compose} from "redux";
+			
+		const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+		
+		ReactDOM.render(
+			<Provider store={createStore(reducers, composeEnhancers(applyMiddleware()))}>
+				<App/>
+			</Provider>,
+			document.getElementById('root')
+		);
+		```
+- Debug Session with Redux Dev Tools: `localhost:3000?debug_session=<SOME_STRING>`, with that usage if you refresh you page with same `<SOME_STRING>`, tool will continue from your given session.
 
 ## COURSE PROJECTS
 
