@@ -1318,6 +1318,9 @@ Only `/`
 	}
 	```
 - Validation:
+	
+	![17_ReduxFormValidation](ReactNoteImages/17_ReduxFormValidation.png)
+
 	- Create a validate function and give as parameter to `reduxForm` as `validate`
 	- Returns an errors object. If there is no error return `{}` empty object.
 
