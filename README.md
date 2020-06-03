@@ -781,116 +781,116 @@ npm install --save redux react-redux
 
 	`function connect(mapStateToProps?, mapDispatchToProps?, mergeProps?, options?)`
 	
-	The `mapStateToProps` and `mapDispatchToProps` deals with your Redux store’s state and dispatch, respectively. state and dispatch will be supplied to your mapStateToProps or mapDispatchToProps functions as the first argument.
+	The `mapStateToProps` and `mapDispatchToProps` deals with your Redux store’s state and dispatch, respectively.
 	
 	The return of `connect()` is a __wrapper function__ that takes your component and returns a __wrapper component__ with the additional props it injects.
 	
-	- `mapStateToProps?: (state, ownProps?) => Object` : it can take all Redux store’s states and components props__(optional)__ as well.
-	- `mapDispatchToProps?: Object | (dispatch, ownProps?) => Object` : it can be directly an object which contains actionCreators or like `mapStateToProps` it can be function which takes dispatch and components props__(optional)__ as well.
+	- `mapStateToProps?: (state, ownProps?) => Object` : it can take all Redux store’s states and components props __(optional)__ as well.
+	- `mapDispatchToProps?: Object | (dispatch, ownProps?) => Object` : it can be directly an object which contains actionCreators or like `mapStateToProps` it can be function which takes dispatch and components props __(optional)__ as well.
 
 
 ### React and Redux How we need to configure ?
 
 - Reducer class should export combined reducers. Reducer actually means store which we are gonna keep our states and also if something changed by an action it needs to update itself.
 
-```javascript
-import {combineReducers} from "redux";
+	```javascript
+	import {combineReducers} from "redux";
+	
+	// SOME OTHER REDUCERS...
+	
+	const selectItemReducer = (selected = null, action) => {
+	    if (action.type === 'SELECT_ITEM') {
+	        return action.payload;
+	    }
+	    return selected;
+	};
+	
+	export default combineReducers({
+	    // SOME OTHER REDUCERS...
+	    mySelectedItem: selectItemReducer
+	});
+	```
 
-// SOME OTHER REDUCERS...
+- Our App component should be covered by a provider which is keeping store in index.js and also `createStore` of `redux` could called with reducers:
 
-const selectItemReducer = (selected = null, action) => {
-    if (action.type === 'SELECT_ITEM') {
-        return action.payload;
-    }
-    return selected;
-};
-
-export default combineReducers({
-    // SOME OTHER REDUCERS...
-    mySelectedItem: selectItemReducer
-});
-```
-
-- Our App component should be covered by a provider which is keeping store in index.js like that:
-
-```javascript
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {Provider} from 'react-redux';
-import {createStore} from 'redux';
-import reducers from './reducers';
-import App from './components/App';
-
-ReactDOM.render(
-    <Provider store={createStore(reducers)}>
-        <App/>
-    </Provider>,
-    document.getElementById('root')
-);
-```
+	```javascript
+	import React from 'react';
+	import ReactDOM from 'react-dom';
+	import {Provider} from 'react-redux';
+	import {createStore} from 'redux';
+	import reducers from './reducers';
+	import App from './components/App';
+	
+	ReactDOM.render(
+	    <Provider store={createStore(reducers)}>
+	        <App/>
+	    </Provider>,
+	    document.getElementById('root')
+	);
+	```
 
 - Actions are just functions which returning json object with type (action type) and payload (data).
 
-```javascript
-// Action Creator
-export const selectSong = (song) => {
-    // Return an action
-    return {
-        type: 'SONG_SELECTED',
-        payload: song
-    }
-};
-```
+	```javascript
+	// Action Creator
+	export const selectSong = (song) => {
+	    // Return an action
+	    return {
+	        type: 'SONG_SELECTED',
+	        payload: song
+	    }
+	};
+	```
 
 - A component which wants to connect to our store (Redux side) should be covered with connect (Which is coming from react-redux lib) function
 
-```javascript
-import React, {Component} from "react";
-import {connect} from "react-redux";
-
-class SongList extends Component {
-    constructor(props) {
-        super(props);
-        console.log(props);
-    }
-    render() {
-        return <div>MyComponent</div>;
-    }
-}
-
-const mapStateToProps = (state) => {
-    //State Contains all store and we are selecting
-    //what we need in that function
-    return {myList: state.list};
-};
-
-export default connect(mapStateToProps)(SongList);
-```
+	```javascript
+	import React, {Component} from "react";
+	import {connect} from "react-redux";
+	
+	class SongList extends Component {
+	    constructor(props) {
+	        super(props);
+	        console.log(props);
+	    }
+	    render() {
+	        return <div>MyComponent</div>;
+	    }
+	}
+	
+	const mapStateToProps = (state) => {
+	    //State Contains all store and we are selecting
+	    //what we need in that function
+	    return {myList: state.list};
+	};
+	
+	export default connect(mapStateToProps)(SongList);
+	```
 
 - If A component wants to dispatch some action, it should use an action creator. To use an action creator, it should add mapDispatchToProps array to connect function as second parameter. 
 
-```javascript
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {selectSong} from '../actions';
-
-class SongComponent extends Component {
-	render() {
-		const {song, selectSong} = this.props;
-		return (
-			<div>
-				<button onClick={() => selectSong(song)}>Select</button>
-			</div>
-		);
+	```javascript
+	import React, {Component} from 'react';
+	import {connect} from 'react-redux';
+	import {selectSong} from '../actions';
+	
+	class SongComponent extends Component {
+		render() {
+			const {song, selectSong} = this.props;
+			return (
+				<div>
+					<button onClick={() => selectSong(song)}>Select</button>
+				</div>
+			);
+		}
 	}
-}
-
-// Function selectSong added as mapDispatchToProps as second parameter.
-export default connect(
-    null,
-    {selectSong}
-)(SongComponent);
-```
+	
+	// Function selectSong added as mapDispatchToProps as second parameter.
+	export default connect(
+	    null,
+	    {selectSong}
+	)(SongComponent);
+	```
 
 ### Redux is not a magic!
 
@@ -1221,9 +1221,9 @@ Only `/`
 	
 - Documentation: [Redux Form Link](https://redux-form.com/)
 	
-![HandlingInputswithoutRedux](ReactNoteImages/15_HandlingInputswithoutRedux.png)
+	![HandlingInputswithoutRedux](ReactNoteImages/15_HandlingInputswithoutRedux.png)
 
-![16_HandlingInputswithReduxForm](ReactNoteImages/16_HandlingInputswithReduxForm.png)
+	![16_HandlingInputswithReduxForm](ReactNoteImages/16_HandlingInputswithReduxForm.png)
 
 - To use redux form 
 	- First need to import redux-form reducer with specific name `form` into reducers:
@@ -1391,19 +1391,246 @@ Only `/`
 		validate: validate
 	})(MyComponent);
 	```
+	
+## SECTION 20 - REST-Based React Apps
+
+- Array Based Reducer Update Approach:
+	
+	```javascript
+	export default (state = [], action) => {
+		switch (action.types) {
+			case actionTypes.EDIT_STREAM:
+				return state.map(stream => {
+					if (stream.id === action.payload.id) {
+						return action.payload;
+					} else {
+						return stream;
+					}
+				})
+			default:
+				return state;
+		}
+	};
+	```
+
+- Object Based Reducer Update Aproach:
+
+	```javascript
+	export default (state = [], action) => {
+		switch (action.types) {
+			case actionTypes.EDIT_STREAM:
+				// const newState = {...state};
+				// newState[action.payload.id] = action.payload:
+				// return newState;
+				
+				// OR Same with new ES2015 crazy syntax:
+				return {...state, [action.payload.id]: action.payload};
+			default:
+				return state;
+		}
+	};
+	```
+	
+- There are two types of navigation: 
+	- __Intentional Navigation__ : User clicks on a `Link` component. 
+	- __Programmatic Navigation__ : A code block runs to forcibly navigate the user through the app. 
+
+- There are two types selection from :
+	- __Selection Reducer__ : When a user clicks on a stream to edit it, use a `selectionReducer` to record what stream is being edited.
+	- __URL-Based Selection__ : Put the ID of stream being edited in the URL.
+
+- Redux form has `validate` and `initialValues` as parameter and if you give `initialValues` like code example which is given below, it will automatically pick your initial values.
+	
+### Code examples from section	
+- Full Reducer Example:
+
+	```javascript
+	import * as actionTypes from "../actions/types";
+	import _ from 'lodash';
+	
+	export default (state = {}, action) => {
+	    switch (action.type) {
+	        case actionTypes.FETCH_STREAMS:
+	            let newStates = _.mapKeys(action.payload, 'id');
+	            return {...state, ...newStates};
+	        case actionTypes.FETCH_STREAM:
+	        case actionTypes.CREATE_STREAM:
+	        case actionTypes.EDIT_STREAM:
+	            return {...state, [action.payload.id]: action.payload};
+	        case actionTypes.DELETE_STREAM:
+	            return _.omit(state, action.payload)
+	        default:
+	            return state;
+	    }
+	};
+	```
+	
+- Full Action Example:
+	- types.js:
+	
+		```javascript
+		// Streams:
+		export const FETCH_STREAMS = 'FETCH_STREAMS';
+		export const FETCH_STREAM = 'FETCH_STREAM';
+		export const CREATE_STREAM = 'CREATE_STREAM';
+		export const EDIT_STREAM = 'EDIT_STREAM';
+		export const DELETE_STREAM = 'DELETE_STREAM';
+		```
+		
+	- index.js:
+		
+		```javascript
+		import * as types from './types'
+		import streamsApi from "../apis/streamsApi";
+		import history from "../history";
+		
+		export const signIn = (userId) => ({type: types.SIGN_IN, payload: userId})
+		export const signOut = () => ({type: types.SIGN_OUT})
+		
+		export const fetchStreams = () => async dispatch => {
+		    let response = await streamsApi.get('/streams');
+		    dispatch({type: types.FETCH_STREAMS, payload: response.data});
+		}
+		
+		export const fetchStream = id => async dispatch => {
+		    let response = await streamsApi.get(`/streams/${id}`);
+		    dispatch({type: types.FETCH_STREAM, payload: response.data});
+		}
+		
+		export const createStream = formValues => async (dispatch, getState) => {
+		    const {userId} = getState().auth;
+		    let response = await streamsApi.post('/streams', {...formValues, userId});
+		
+		    dispatch({type: types.CREATE_STREAM, payload: response.data});
+		    history.push('/')
+		}
+		
+		export const editStream = (id, formValue) => async dispatch => {
+		    let response = await streamsApi.patch(`/streams/${id}`, formValue);
+		    dispatch({type: types.EDIT_STREAM, payload: response.data});
+		    history.push('/');
+		}
+		
+		export const deleteStream = (id) => async dispatch => {
+		    await streamsApi.delete(`/streams/${id}`);
+		    dispatch({type: types.DELETE_STREAM, payload: id});
+		}
+		```
+		
+- Form Example with reduxForm:
+	
+	```javascript
+	import React, {Component} from "react";
+	import {Field, reduxForm} from "redux-form";
+	
+	class StreamForm extends Component {
+	    onSubmit = (formValues) => {
+	        this.props.onSubmit(formValues);
+	    }
+	
+	    renderError = (meta) => {
+	        const {error, touched} = meta;
+	        if (touched && error) {
+	            return (
+	                <div className='ui error message'>
+	                    <div className='header'>{error}</div>
+	                </div>
+	            );
+	        }
+	    }
+	
+	    renderInput = ({input, label, meta}) => {
+	        const className = `field ${(meta.error && meta.touched) ? 'error' : ''}`
+	        return (
+	            <div className={className}>
+	                <label htmlFor={input.name}>{label} : </label>
+	                <input id={input.name} {...input} autoComplete='off'/>
+	                {this.renderError(meta)}
+	            </div>
+	        );
+	    }
+	
+	    render() {
+	        return (
+	            <form className='ui form error' onSubmit={this.props.handleSubmit(this.onSubmit)}>
+	                <Field name='title' component={this.renderInput} label='Enter Title'/>
+	                <Field name='description' component={this.renderInput} label='Enter Description'/>
+	                <button className='ui button primary' type="submit">Submit</button>
+	            </form>
+	        );
+	    }
+	}
+	
+	const validate = (formValues) => {
+	    const errors = {};
+	    if (!formValues.title) {
+	        errors.title = 'You must enter a title';
+	    }
+	    if (!formValues.description) {
+	        errors.description = 'You must enter a description';
+	    }
+	    return errors;
+	}
+	
+	export default reduxForm({
+	    form: 'streamForm',
+	    validate: validate
+	})(StreamForm);
+	```
+	
+- Usage of given above form inside edit component : 
+
+	```javascript
+	import React, {Component} from "react";
+	import {connect} from "react-redux";
+	import {fetchStream, editStream} from "../../actions";
+	import StreamForm from "./StreamForm";
+
+	class StreamEdit extends Component {
+	    componentDidMount() {
+	        this.streamId = this.props.match.params.id
+	        this.props.fetchStream(this.streamId);
+	    }
+	
+	    onSubmit = (formValues) => {
+	        this.props.editStream(this.streamId, formValues);
+	    }
+	
+	    render() {
+	        return (
+	            <div>
+	                <h3>Edit a Stream</h3>
+	                <StreamForm
+	                    onSubmit={this.onSubmit}
+	                    initialValues={this.props.stream}  //Initial Values Usage
+	                />
+	            </div>
+	        );
+	    }
+	}
+	
+	const mapStateToProps = (state, ownProps) => {
+	    return {stream: state.streams[ownProps.match.params.id]}
+	}
+	
+	export default connect(
+	    mapStateToProps,
+	    {fetchStream, editStream}
+	)(StreamEdit);
+	```
 
 ## COURSE PROJECTS
 
-| Sections       | Projects       | 
-|----------------|----------------|
-| 1 2            | 01_helloworld  |
-| 3              | 03_components  |
-| 4 5 6          | 04_seasons     |
-| 7 8 9 10       | 07_pics        |
-| 11             | 11_videos      |
-| 13             | 13_songs       |
-| 14 15          | 14_blog        |
-| 16 17 18 19 20 | 16_streams     |
+| Sections                  | Projects       | 
+|---------------------------|----------------|
+| 1 2                       | 01_helloworld  |
+| 3                         | 03_components  |
+| 4 5 6                     | 04_seasons     |
+| 7 8 9 10                  | 07_pics        |
+| 11                        | 11_videos      |
+| 13                        | 13_songs       |
+| 14 15                     | 14_blog        |
+| 16 17 18 19 20 21         | 16_streams     |
 
 
 ## EXTRA INFORMATIONS
@@ -1422,5 +1649,42 @@ Only `/`
 - Install lodash library: `npm install --save lodash` which is a modern JavaScript utility library delivering modularity, performance & extras. Some lodash informations:
 	- Generally used with `_` (__underscore__)
 	- `_.memoize(func, [resolver])` : Creates a function that memoizes the result of func. If resolver is provided, it determines the cache key for storing the result based on the arguments provided to the memoized function. By default, the first argument provided to the memoized function is used as the map cache key. The func is invoked with the this binding of the memoized function.
+
+- [__Json Server__](https://www.npmjs.com/package/json-server) : Get a full fake REST API with zero coding in less than 30 seconds. Simple example steps: 
+	- create directory with any name
+	- run `npm init` and enter enter enter without give any thing...
+	- install json-server `npm install --save json-server`
+	- Create json file which will give information about fake database with any name:
+	
+		db.json: 
+		
+		```
+		{
+			"streams":[]
+		}
+
+		```
+	- Add start script into package.json :
+		
+		```
+		{
+			"name": "api",
+			"version": "1.0.0",
+			"description": "",
+			"main": "index.js",
+			"scripts": {
+				"start": "json-server -p 3001 -w db.json"
+			},
+			"author": "",
+			"license": "ISC",
+			"dependencies": {
+				"json-server": "^0.16.1"
+			}
+		}
+		```
+	- Run `npm start`
+
+
+
 
 	

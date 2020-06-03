@@ -1,0 +1,51 @@
+{
+  "streams": [
+    {
+      "title": "deneme",
+      "description": "deneme",
+      "id": 1
+    },
+    {
+      "title": "deneme21",
+      "description": "deneme21312",
+      "id": 2
+    },
+    {
+      "title": "Tolga",
+      "description": "Created Given Stream",
+      "id": 3
+    },
+    {
+      "title": "aDA",
+      "description": "sa",
+      "id": 4
+    },
+    {
+      "title": "sadasd",
+      "description": "dsadas",
+      "id": 5
+    },
+    {
+      "title": "deneme",
+      "description": "1321",
+      "userId": "100629707457479401492",
+      "id": 6
+    },
+    {
+      "title": "2",
+      "description": "1",
+      "userId": "100629707457479401492",
+      "id": 7
+    },
+    {
+      "title": "YESasds",
+      "description": "dsadasdsa",
+      "id": 8
+    },
+    {
+      "title": "test edited stream",
+      "description": "test edited stream11",
+      "id": 9
+    }
+  ]
+}
