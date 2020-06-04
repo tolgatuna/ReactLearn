@@ -1842,29 +1842,30 @@ Only `/`
 	![28_ReduxVsReact_2.png](ReactNoteImages/28_ReduxVsReact_2.png)
 	
 - Context Store Example:
-	-Creating a store:
+
+	- Creating a store:
 	
 		```javascript
 		import React, {Component} from 'react';
-
+		
 		const Context = React.createContext('ENGLISH');
-		
+			
 		export class LanguageStore extends Component {
-		    state = {language: 'english'};
-		
-		    onLanguageChange = (language) => {
-		        this.setState({language})
-		    }
-		
-		    render() {
-		        return (
-		            <Context.Provider value={{...this.state, onLanguageChange: this.onLanguageChange}}>
-		                {this.props.children}
-		            </Context.Provider>
-		        );
-		    }
+			state = {language: 'english'};
+				
+			onLanguageChange = (language) => {
+				this.setState({language})
+			}
+			
+			render() {
+				return (
+					<Context.Provider value={{...this.state, onLanguageChange: this.onLanguageChange}}>
+						{this.props.children}
+					</Context.Provider>
+				);
+			}
 		}
-		
+			
 		export default Context;
 		```	
 		
@@ -1879,20 +1880,180 @@ Only `/`
 	
 	- Usage is the same with normal context.
 
+## SECTION 25 - Hooks with Functional Components
+- Hook System
+
+	| Name                  | Goal           | 
+	|-----------------------|----------------|
+	| __useState__          | Allow a functional component to use component-level state |
+	| __useEffect__         | Allow a functional component to use `lifecycle methods`   |
+	| __useContext__        | Allow a functional component to use the context system    |
+	| __useRef__            | Allow a functional component to use the ref system        |
+
+- Converting a class-based component to functional based component with hooks system:
+
+	- Class based:
+		
+		```javascript
+		import React, {Component} from "react";
+		
+		export default class App extends Component {
+		    state = {resource: 'posts'};
+		
+		    render() {
+		        return (
+		            <div>
+		                <div>
+		                    <button onClick={() => this.setState({resource: 'Posts'})}>Posts</button>
+		                    <button onClick={() => this.setState({resource: 'Todos'})}>Todos</button>
+		                </div>
+		                {this.state.resource}
+		            </div>
+		        );
+		    }
+		};
+		```
+		
+	- Funtional based:
+		
+		```javascript
+		import React, {useState} from "react";
+
+		const App = () => {
+		    const [resource, setResource] = useState('posts')
+		    return (
+		        <div>
+		            <div>
+		                <button onClick={() => setResource('posts')}>Posts</button>
+		                <button onClick={() => setResource('todos')}>Todos</button>
+		            </div>
+		            {resource}
+		        </div>
+		    );
+		};
+		
+		export default App;
+		```
+- __useState hook__ : `const [<currentValue>, <setCurrentValue>] = useState(<initialValue>);`
+	- `useState` : Function from React
+	- `currentValue` : contains the present value of the piece of state (same as the `this.state.SomeState`)
+	- `setCurrentValue` : Function to call when we want to update our state (and rerender) (same as the `this.setState({<SomeStates>})`)
+	- `initialValue` : Starting value for this piece of state, similar to when we initialized our state object
+
+- `useState` keeps single value instead of whole state!!! To use more than one state, needs to use useState more than one.
+
+	```javascript
+	// in Class-based
+	state = {
+		resource: 'posts',
+		count: 0
+	}
+	
+	// in Functional-based
+	const [resource, setResource] = useState('posts')
+	const [count, setCount] = useState(0)
+	```
+- __useEffect hook__ : `useEffect(effect: EffectCallback, deps?: DependencyList): void;` 
+	
+	![29_useEffect.png](ReactNoteImages/29_useEffect.png)
+	
+	- if you dont put any `DependencyList`, `aFunction` gonna call recursively itself until user left the page!
+		
+		```
+		useEffect(() => aFunction())
+		```
+		
+	- if you put an empty array as `DependencyList`, `aFunction` gonna call itself just one time like `componentDidMount`.
+		
+		```
+		useEffect(() => aFunction(), [])
+		```
+		
+	- if you put one or more elements as array to `DependencyList`, `aFunction` gonna call itself when just given dependencies are changed. 		
+
+		```
+		useEffect(() => aFunction(), [someDependency])
+		```
+		
+	- Example of `useEffect`:
+		
+		```javascript
+		import React, {useEffect, useState} from "react";
+		import axios from 'axios';
+		
+		const ResourceList = ({resource}) => {
+		    const [resources, setResources] = useState([]);
+		
+		    const fetchResources = async (resource) => {
+		        const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
+		        setResources(response.data);
+		    }
+		
+		    useEffect(() => {
+		        fetchResources(resource);
+		    }, [resource]);
+		
+		    return <div>{resources.length}</div>;
+		}
+		
+		export default ResourceList;
+		```
+		
+- Separate hooks from the actual code :
+
+	```javascript
+	import {useEffect, useState} from "react";
+	import axios from "axios";
+	
+	const useResources = (resource) => {
+	    const [resources, setResources] = useState([]);
+	
+	    const fetchResources = async (resource) => {
+	        const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
+	        setResources(response.data);
+	    }
+	
+	    useEffect(() => {
+	        fetchResources(resource);
+	    }, [resource]);
+	
+	    return resources;
+	};
+	
+	export default useResources;
+	``` 
+	
+	__and usage in a component__
+	
+	```javascript
+	import React from "react";
+	import useResources from "./useResources";
+	
+	const ResourceList = ({resource}) => {
+	    const resources = useResources(resource);
+	    return <ul>
+	        {resources.map(record => <li key={record.id}>{record.title}</li>)}
+	    </ul>;
+	}
+	
+	export default ResourceList;
+	``` 
+		
 		
 ## COURSE PROJECTS
 
-| Sections                  | Projects       | 
-|---------------------------|----------------|
-| 1 2                       | 01_helloworld  |
-| 3                         | 03_components  |
-| 4 5 6                     | 04_seasons     |
-| 7 8 9 10                  | 07_pics        |
-| 11                        | 11_videos      |
-| 13                        | 13_songs       |
-| 14 15                     | 14_blog        |
-| 16 17 18 19 20 21 22      | 16_streams     |
-| 23 24                     | 23_translate   |
+| Sections                  | Projects         | 
+|---------------------------|------------------|
+| 1 2                       | 01_helloworld    |
+| 3                         | 03_components    |
+| 4 5 6                     | 04_seasons       |
+| 7 8 9 10                  | 07_pics          |
+| 11                        | 11_videos        |
+| 13                        | 13_songs         |
+| 14 15                     | 14_blog          |
+| 16 17 18 19 20 21 22      | 16_streams       |
+| 23 24                     | 23_translate     |
+| 25                        | 25_hooks_simple  |
 
 
 ## EXTRA INFORMATIONS
@@ -1949,3 +2110,13 @@ Only `/`
 - [Node Media Server](https://github.com/illuspas/Node-Media-Server) : A Node.js implementation of RTMP/HTTP-FLV/WS-FLV/HLS/DASH Media Server
 - [OBS Studio](https://obsproject.com/) : Free and open source software for video recording and live streaming.
 - `npm install --save flv.js` : FLV Player library : This module offers Encoder and Decoder stream classes for working with FLV media files.
+- Array destructing: 
+
+	```javascript
+	const myArray = [1,3,5];
+	
+	const [myNum1, myNum2, myNum3] = myArray;
+	console.log(myNum1); // It will print 1
+	console.log(myNum2); // It will print 3
+	console.log(myNum3); // It will print 5
+ 	```
