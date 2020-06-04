@@ -1834,9 +1834,52 @@ Only `/`
 	)
 	```
 		
-		
-		
+## SECTION 24 - Replacing Redux with Context
+- Redux vs Context
 
+	![27_ReduxVsReact.png](ReactNoteImages/27_ReduxVsReact.png)
+	
+	![28_ReduxVsReact_2.png](ReactNoteImages/28_ReduxVsReact_2.png)
+	
+- Context Store Example:
+	-Creating a store:
+	
+		```javascript
+		import React, {Component} from 'react';
+
+		const Context = React.createContext('ENGLISH');
+		
+		export class LanguageStore extends Component {
+		    state = {language: 'english'};
+		
+		    onLanguageChange = (language) => {
+		        this.setState({language})
+		    }
+		
+		    render() {
+		        return (
+		            <Context.Provider value={{...this.state, onLanguageChange: this.onLanguageChange}}>
+		                {this.props.children}
+		            </Context.Provider>
+		        );
+		    }
+		}
+		
+		export default Context;
+		```	
+		
+	- Wrapping component:
+		
+		```javascript
+		<LanguageStore>
+			<LanguageSelector/>
+			<UserCreate/>
+		</LanguageStore>
+		```
+	
+	- Usage is the same with normal context.
+
+		
 ## COURSE PROJECTS
 
 | Sections                  | Projects       | 
@@ -1849,7 +1892,7 @@ Only `/`
 | 13                        | 13_songs       |
 | 14 15                     | 14_blog        |
 | 16 17 18 19 20 21 22      | 16_streams     |
-| 23                        | 23_translate   |
+| 23 24                     | 23_translate   |
 
 
 ## EXTRA INFORMATIONS
