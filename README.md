@@ -164,7 +164,7 @@
 - 'State' is a JS object that contains data relevant to a component
 - Updating a 'state' on a component causes the component to (almost) instantly rerender
 - State must be initialized when a component is created
-- State can __ONLY__ be updated using the function 'setState' (For the first time to create state object you can use assingment `this.state = {...})`
+- State can __ONLY__ be updated using the function 'setState' (For the first time to create state object you can use assignment `this.state = {...})`
 - Example of state usage: 
 
 	```javascript
@@ -1684,6 +1684,158 @@ Only `/`
 		</>
 	);
 	```
+	
+## SECTION 22 - Implementing Streaming Video
+- Section entined about `flv.js` __OBS Studio__ and __Node Media Server__. Links can be accessed from extra informations given below.
+	
+## SECTION 23 - The Context System with React
+
+- Difference between context system and props system:
+
+	![20_PropsVsContext](ReactNoteImages/20_PropsVsContext.png)
+	
+- Flow in Props System:
+
+	![21_CommunicationWithProps](ReactNoteImages/21_CommunicationWithProps.png)
+
+- Flow in Context System:
+
+	![22_CommunicationWithContext](ReactNoteImages/22_CommunicationWithContext.png)
+
+- Context System Pipe:
+
+	![23_ContextPipe](ReactNoteImages/23_ContextPipe.png)
+	
+- How it works?
+
+	![24_ContextFlow.png](ReactNoteImages/24_ContextFlow.png)
+	
+### Creating A Context and Usage of Context
+
+- Need to create a javascript file and need to create context with `React.createContext ` :
+	
+	```javascript
+	import React from 'react';
+	export default React.createContext('english');
+	```
+	
+- For use of context in any component, `static contextType` should be assigned in the component or `Context.Consumer` should be used:
+	
+	- First Way  -> `static contextType` : 
+	
+		```javascript
+		import React, {Component} from 'react';
+		import LanguageContext from "../contexts/LanguageContext";
+		
+		class Field extends Component {
+		    render() {
+		        const text = this.context === 'ENGLISH' ? 'Name' : 'Naam'
+		        return (
+		            <div className='ui field'>
+		                <label>{text}</label>
+		                <input/>
+		            </div>
+		        );
+		    }
+		}
+		
+		Field.contextType = LanguageContext;
+		export default Field;
+		```
+		
+		- __There are two ways exist for assign `contextType ` :__ 
+		
+			```javascript
+			import ANY_CONTEXT from "../contexts/ANY_CONTEXT";
+			
+			class Field extends Component {
+			    // Some code
+			}
+			
+			Field.contextType = ANY_CONTEXT;
+			```
+			
+			__or__
+			
+			
+			```javascript
+			import ANY_CONTEXT from "../contexts/ANY_CONTEXT";
+			
+			class Field extends Component {
+			    static contextType = ANY_CONTEXT
+			    
+			    // OTHER CODES...
+			}
+			
+			```
+	- Second Way - Using `Context.Consumer` :
+		
+		```javascript
+		import React, {Component} from 'react';
+		import LanguageContext from "../contexts/LanguageContext";
+		
+		class Button extends Component {
+		    render() {
+		        return (
+		            <button className='ui button primary'>
+		                <LanguageContext.Consumer>
+		                    {(value) => value === 'ENGLISH' ? 'Submit' : 'Voorlagen'}
+		                </LanguageContext.Consumer>
+		            </button>
+		        )
+		    }
+		}
+		export default Button;
+		```
+
+	
+- To change a value of context main component of context should be wrapped with `context.Provider` and `value` should be assigned (new value can be state and prop which can be changable):
+
+	```javascript
+	<Context.Provider value={newValue}>
+		<Compoent/>
+	</Context.Provider>
+	```
+	
+	![25_ContextProvider.png](ReactNoteImages/25_ContextProvider.png)
+		
+### Notes
+- Each seperate use of `Context.Provider` creates a __new__, separate __pipe__ of information.
+
+	![26_MultipleProviderForDifferenComponents.png](ReactNoteImages/26_MultipleProviderForDifferenComponents.png)
+
+- If you not wrap your component with `Context.Provider` and not give any `value` which is using context system, it is going to use default value of `Context`.
+
+- To use more than one context inside one component, you have to use consumer:
+
+	__Wrapper with multiple provider__
+	
+	```javascript
+	<LanguageContext.Provider value={this.state.language}>
+		<ColorContext.Provider value='red'>
+			<UserCreate/>
+		</ColorContext.Provider>
+	</LanguageContext.Provider>
+	```
+	
+	__Use Multiple Consumer__
+	
+	```javascript
+	return (
+		<ColorContext.Consumer>
+			{(color) =>
+				<button className={`ui button ${color}`}>
+					<LanguageContext.Consumer>
+						{(value) => value === 'ENGLISH' ? 'Submit' : 'Voorlagen'}
+					</LanguageContext.Consumer>
+				</button>
+			}
+		</ColorContext.Consumer>
+	)
+	```
+		
+		
+		
 
 ## COURSE PROJECTS
 
@@ -1697,6 +1849,7 @@ Only `/`
 | 13                        | 13_songs       |
 | 14 15                     | 14_blog        |
 | 16 17 18 19 20 21 22      | 16_streams     |
+| 23                        | 23_translate   |
 
 
 ## EXTRA INFORMATIONS
