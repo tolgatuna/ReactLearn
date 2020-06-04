@@ -23,6 +23,7 @@
 - `Babel:` Which is a toolchain that is mainly used to convert ECMAScript 2015+ (ES20015 and newer versions) code into a backwards compatible version of JavaScript in current and older browsers or environments. Babel also converts our JSX code to javascipt code as well.
 
 ![DirectoryStructure](ReactNoteImages/01_DirectoryStructure.png)
+
 ![Component](ReactNoteImages/02_Component.png)
 
 
@@ -1619,6 +1620,71 @@ Only `/`
 	)(StreamEdit);
 	```
 
+## SECTION 21 - Using React Portals
+
+- What is portal will do?
+
+	- Without portal : 	
+	
+	![18_NormalComponentFlowOfReact](ReactNoteImages/18_NormalComponentFlowOfReact.png)
+	
+	- With portal we can do a modal :
+	
+	![19_PortalFlow](ReactNoteImages/19_PortalFlow.png)
+	
+- To create a modal, we will use portal. Usage of portal for modal :
+	- Add another div with another id to the `index.html`:
+		
+		```html
+		<div id="root"></div>
+		<div id="modal"></div>
+		```
+	
+	- create a modal.js
+	
+		```javascript
+		const Modal = props => {
+			return ReactDOM.createPortal(
+				<div onClick={props.onDismiss} className='ui dimmer modals visible active'>
+					<div onClick={e => e.stopPropagation()} className='ui standard modal visible active'>
+						<div className='header'>{props.title}</div>
+						<div className='content'>
+							{props.content}
+						</div>
+						<div className='actions'>
+							{props.actions}
+						</div>
+					</div>
+				</div>,
+				document.getElementById('modal')
+			);
+		}
+		
+		export default Modal;
+		```
+
+- `React.Fragment` : it allows us to return multiple elements and it does __not__ create any div or element in real html.
+	
+	```javascript
+	const actions = (
+		<React.Fragment>
+			<button className='ui button negative'>Delete</button>
+			<button className='ui button'>Cancel</button>
+		</React.Fragment>
+	);
+	```
+	
+	__or you can just call like that__
+
+	```javascript
+	const actions = (
+		<>
+			<button className='ui button negative'>Delete</button>
+			<button className='ui button'>Cancel</button>
+		</>
+	);
+	```
+
 ## COURSE PROJECTS
 
 | Sections                  | Projects       | 
@@ -1630,7 +1696,7 @@ Only `/`
 | 11                        | 11_videos      |
 | 13                        | 13_songs       |
 | 14 15                     | 14_blog        |
-| 16 17 18 19 20 21         | 16_streams     |
+| 16 17 18 19 20 21 22      | 16_streams     |
 
 
 ## EXTRA INFORMATIONS
