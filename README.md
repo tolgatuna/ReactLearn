@@ -1750,7 +1750,6 @@ Only `/`
 		```
 	- Run `npm start`
 
-
-
-
-	
+- [Node Media Server](https://github.com/illuspas/Node-Media-Server) : A Node.js implementation of RTMP/HTTP-FLV/WS-FLV/HLS/DASH Media Server
+- [OBS Studio](https://obsproject.com/) : Free and open source software for video recording and live streaming.
+- `npm install --save flv.js` : FLV Player library : This module offers Encoder and Decoder stream classes for working with FLV media files.
