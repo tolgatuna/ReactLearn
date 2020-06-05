@@ -2054,6 +2054,7 @@ Only `/`
 | 16 17 18 19 20 21 22      | 16_streams       |
 | 23 24                     | 23_translate     |
 | 25                        | 25_hooks_simple  |
+| 26                        | 26_seasons       |
 
 
 ## EXTRA INFORMATIONS
