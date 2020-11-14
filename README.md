@@ -647,7 +647,12 @@ class ImageCard extends React.Component {
 export default ImageCard;
 ```
 
-## SECTION 12 - On We Go...To Redux!
+## Section 12: Understanding Hooks in React
+## Section 13: Navigation From Scratch
+## Section 14: Hooks in Practice
+## Section 15: Deploying a React App
+
+## SECTION 16 - On We Go...To Redux!
 ### What is Redux?
 
 - State management library
@@ -766,7 +771,7 @@ const numbers = [1, 2, 3];
 // But with ... we are creating brand new array.
 ```
 
-## SECTION 13 - Integrating React with Redux
+## SECTION 17 - Integrating React with Redux
 ### React-Redux
 
 To install redux and react-redux libraries:
@@ -899,7 +904,7 @@ npm install --save redux react-redux
 - Redux does not automatically detect a function returning an object that is an `action`
 
 
-## SECTION 14 - Async Actions with Redux Thunk
+## SECTION 18 - Async Actions with Redux Thunk
 - Install redux-thunk
 
 	```
@@ -1024,7 +1029,7 @@ export const fetchPost = () => async dispatch => {
 	```
 	
 
-## SECTION 15 - Redux Store Design
+## SECTION 19 - Redux Store Design
 ### Rules of Reducers
 
 - When react application runs with redux, all reducers called with undefined first time. That means all default values setted up at the beginning.
@@ -1058,7 +1063,7 @@ export default (state, action) => {
 
 ![ChangingArrayOrObjectWithCreatingNewOne](ReactNoteImages/07_ChangingArrayOrObjectWithCreatingNewOne.png)
 
-## SECTION 16 - Navigation with React Router
+## SECTION 20 - Navigation with React Router
 
 - Install react-router-dom:
 
@@ -1131,7 +1136,7 @@ Only `/`
 - Use single element inside a Router element.
 - `<Switch>` looks through all its children `<Route>` elements and renders the first one whose path matches the current URL. Use a `<Switch>` any time you have multiple routes, but you want only one of them to render at a time
 
-## SECTION 17 - Handling Authentication with React
+## SECTION 21 - Handling Authentication with React
 - Project used client side google authentication. Here is an example component for sign in button of google:
 	
 	```javascript
@@ -1191,7 +1196,7 @@ Only `/`
 	export default GoogleAuth;
 	```
 	
-## SECTION 18 - Redux Dev Tool
+## SECTION 22 - Redux Dev Tool
 - [Redux DevTools](https://github.com/zalmoxisus/redux-devtools-extension/) : In chrome check Home -> Extensions -> Redux DevTools and install __Redux DevTools__
 - To use tool with any react-redux project, need to add given configuration to react-redux app:
 	- import `{applyMiddleware, compose}` from `redux`
@@ -1213,7 +1218,7 @@ Only `/`
 		```
 - Debug Session with Redux Dev Tools: `localhost:3000?debug_session=<SOME_STRING>`, with that usage if you refresh you page with same `<SOME_STRING>`, tool will continue from your given session.
 
-## SECTION 19 - Handling Forms with Redux Form
+## SECTION 23 - Handling Forms with Redux Form
 - Install redux-form:
 
 	```
@@ -1393,7 +1398,7 @@ Only `/`
 	})(MyComponent);
 	```
 	
-## SECTION 20 - REST-Based React Apps
+## SECTION 24 - REST-Based React Apps
 
 - Array Based Reducer Update Approach:
 	
@@ -1620,7 +1625,7 @@ Only `/`
 	)(StreamEdit);
 	```
 
-## SECTION 21 - Using React Portals
+## SECTION 25 - Using React Portals
 
 - What is portal will do?
 
@@ -1685,10 +1690,10 @@ Only `/`
 	);
 	```
 	
-## SECTION 22 - Implementing Streaming Video
+## SECTION 26 - Implementing Streaming Video
 - Section entined about `flv.js` __OBS Studio__ and __Node Media Server__. Links can be accessed from extra informations given below.
 	
-## SECTION 23 - The Context System with React
+## SECTION 27 - The Context System with React
 
 - Difference between context system and props system:
 
@@ -1834,7 +1839,7 @@ Only `/`
 	)
 	```
 		
-## SECTION 24 - Replacing Redux with Context
+## SECTION 28 - Replacing Redux with Context
 - Redux vs Context
 
 	![27_ReduxVsReact.png](ReactNoteImages/27_ReduxVsReact.png)
@@ -1880,7 +1885,7 @@ Only `/`
 	
 	- Usage is the same with normal context.
 
-## SECTION 25 - Hooks with Functional Components
+## [EXTRA CONTENT] Hooks with Functional Components
 - Hook System
 
 	| Name                  | Goal           | 
@@ -2049,12 +2054,16 @@ Only `/`
 | 4 5 6                     | 04_seasons       |
 | 7 8 9 10                  | 07_pics          |
 | 11                        | 11_videos        |
-| 13                        | 13_songs         |
-| 14 15                     | 14_blog          |
-| 16 17 18 19 20 21 22      | 16_streams       |
-| 23 24                     | 23_translate     |
-| 25                        | 25_hooks_simple  |
-| 26                        | 26_seasons       |
+| 12                        |                  |
+| 13                        |                  |
+| 14                        |                  |
+| 15                        |                  |
+| 17                        | 17_songs         |
+| 18 19                     | 18_blog          |
+| 20 21 22 23 24 25 26      | 20_streams       |
+| 27 28                     | 27_translate     |
+| Extra                     | hooks_simple     |
+| Extra                     | seasons          |
 
 
 ## EXTRA INFORMATIONS
