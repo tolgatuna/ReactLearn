@@ -93,11 +93,11 @@
 	Wrapper Component :
 	
 	```javascript
- 	const ApprovalCard = props => {
+ 	const SomeWrapperComponent = props => {
 	    return (
 	        <div className="ui card">
 	            <div className="content">{props.children}</div>
-	            <div className="extra content">
+	            <div className="extraContent">
 	                Some other components or divs...
 	            </div>
 	        </div>
@@ -118,13 +118,13 @@
 ## SECTION 4 -  Structuring Apps with Class-Based Components
 ### Benefits of Class Component:
 - Easier code organization
-- Can use 'state' -> Easier to handle user input
+- Can use `state` -> Easier to handle user input
 - Understands lifecycle events -> Easier to do things when the app first starts
 
 ### Rules of Class Component:
 - Must be a JS Class
-- Must extend from React.Component
-- Must define a 'render' method that returns some amount of JSX.
+- Must extend from `React.Component`
+- Must define a `render` method that returns some amount of JSX.
 - Example of simple class component:
 
 	```javascript
@@ -139,7 +139,7 @@
 	export default SomeComponent;
 	```
 	
-- If you want to have a constructor you have to give props as argument and pass to super:
+- If you want to have a `constructor` you have to give props as argument and pass to super:
 
 	```javascript
 	import React from 'react'
@@ -159,12 +159,12 @@
 
 ## SECTION 5 - State in React Components
 ### Rules of State System in React
-- Only usable with class components (Technically can be used with functional components as well with using the new 'hooks' system)
-- Do __NOT__ confuse props with state
-- 'State' is a JS object that contains data relevant to a component
-- Updating a 'state' on a component causes the component to (almost) instantly rerender
-- State must be initialized when a component is created
-- State can __ONLY__ be updated using the function 'setState' (For the first time to create state object you can use assignment `this.state = {...})`
+- Only usable with class components (Technically can be used with functional components as well with using the __new__ `hooks` system)
+- Do __NOT__ confuse `props` with `state`
+- `state` is a JS object that contains data relevant to a component
+- Updating a `state` on a component causes the component to (almost) instantly rerender
+- `state` must be initialized when a component is created
+- `state` can __ONLY__ be updated using the function `setState` (For the first time to create state object you can use assignment `this.state = {...})`
 - Example of state usage: 
 
 	```javascript
@@ -211,6 +211,7 @@ componentWillUnmount()
 ```
 
 ### Other lifecycle methods (rarely used)
+
 ```javascript
 shouldComponentUpdate()
 getDerivedStateFromProps()
@@ -290,7 +291,7 @@ getSnapshotBeforeUpdate()
 		}
 		```
 
-- __IMPORTANT !!__ -> ```setState()``` method is not changing whole state object. It is an additive method. It is just changing which we gave
+- __IMPORTANT !!__ -> `setState()` method is not changing whole state object. It is an additive method. It is just changing which we gave:
 
 	```javascript
 	class App extends React.Component {
@@ -307,47 +308,47 @@ getSnapshotBeforeUpdate()
 
 ## SECTION 7 - Handling User Input with Forms and Events
 ### Some events:
-- User clicks on something -> ```onClick```
-- User changes text in an input -> ```onChange```
-- User submits a form -> ```onSubmit```
+- User clicks on something -> `onClick`
+- User changes text in an input -> `onChange`
+- User submits a form -> `onSubmit`
 
-### Solving Context Issue for ```this``` keyword in React
+### Solving Context Issue for `this` keyword in React
 
 If you see an error like that:
 
-	```
-	TypeError: Cannot read property 'state' of undefined onFormSubmit
-	src/components/SearchBar.js:8
+```
+TypeError: Cannot read property 'state' of undefined onFormSubmit
+src/components/SearchBar.js:8
 	
-	   5 |
-	   6 | onFormSubmit(event) {
-	   7 |     event.preventDefault();
-	>  8 |     console.log(this.state.term);
-	   9 | ^}
-	  10 |
-	  11 | render() {...
-	```
+   5 |
+   6 | onFormSubmit(event) {
+   7 |     event.preventDefault();
+>  8 |     console.log(this.state.term);
+   9 | ^}
+  10 |
+  11 | render() {...
+```
 
 For given component (for submit of the form - onSubmit function):
 
-	```javascript
-	class SearchBar extends React.Component {
-	    state = {term: ''};
+```javascript
+class SearchBar extends React.Component {
+    state = {term: ''};
 	
-	    onFormSubmit(event) {
-	        event.preventDefault();
-	        console.log(this.state.term);
-	    }
+    onFormSubmit(event) {
+        event.preventDefault();
+        console.log(this.state.term);
+    }
 	
-	    render() {
-	      return (
-	          <form className='ui form' onSubmit={this.onFormSubmit}>
-	             // Other JSX div and items
-	          </form>
-	      );
-	    }
-	}
-	```
+    render() {
+      return (
+          <form className='ui form' onSubmit={this.onFormSubmit}>
+             // Other JSX div and items
+          </form>
+      );
+    }
+}
+```
 
 - __1. Solution:__ Add a constructor and bind function with this
 
@@ -360,8 +361,8 @@ For given component (for submit of the form - onSubmit function):
 	        this.onFormSubmit = this.onFormSubmit.bind(this);
 	    }
 	
-	    onFormSubmit(event) {
-	        event.preventDefault();
+	    onFormSubmit(e) {
+	        e.preventDefault();
 	        console.log(this.state.term);
 	    }
 	
@@ -375,14 +376,14 @@ For given component (for submit of the form - onSubmit function):
 	}
 	```
 
-- __2. Solution (BEST SOLUTION):__ Use arrow function instead of normal function `onFormSubmit = (event) => {}` :
+- __2. Solution (BEST SOLUTION):__ Use arrow function instead of normal function `onFormSubmit = (e) => {}` :
 
 	```javascript
 	class SearchBar extends React.Component {
 	    state = {term: ''};
 	
-	    onFormSubmit = (event) => {
-	        event.preventDefault();
+	    onFormSubmit = (e) => {
+	        e.preventDefault();
 	        console.log(this.state.term);
 	    };
 	
@@ -402,8 +403,8 @@ For given component (for submit of the form - onSubmit function):
 	class SearchBar extends React.Component {
 	    state = {term: ''};
 	
-	    onFormSubmit(event) {
-	        event.preventDefault();
+	    onFormSubmit(e) {
+	        e.preventDefault();
 	        console.log(this.state.term);
 	    }
 	
@@ -421,7 +422,7 @@ For given component (for submit of the form - onSubmit function):
 
 - Best Practice for call back function naming: `on_TypeOfInput_Event` -(EXAMPLE)-> `onInputChange(event)`
 
-- Creating Event Handler (Do not put any parenthesis at the end of function in any event like onChange ):
+- Creating Event Handler (Do not put any parenthesis at the end of function in any event like onChange):
 
 	```javascript
 	onInputChange(event) {
@@ -757,7 +758,7 @@ console.log(store.getState());
 
 ### Notes:
 
-- An action creator is just a function and it should return json object which should contain type and payload
+- An action creator is just a function and it should return json object which should contain `type` and `payload`
 
 - A reducer can be thinkable as State store and responsible from the update any state with an action
 
@@ -782,7 +783,7 @@ npm install --save redux react-redux
 
 ### React-Redux library
 
-- `<Provider />` makes the Redux store available to any nested components that have been wrapped in the connect() function.
+- `<Provider/>` makes the Redux store available to any nested components that have been wrapped in the `connect()` function.
 - `connect()` is a function which connects a React component to a Redux store.
 
 	`function connect(mapStateToProps?, mapDispatchToProps?, mergeProps?, options?)`
@@ -879,22 +880,22 @@ npm install --save redux react-redux
 	import React, {Component} from 'react';
 	import {connect} from 'react-redux';
 	import {selectSong} from '../actions';
-	
+		
 	class SongComponent extends Component {
-		render() {
-			const {song, selectSong} = this.props;
-			return (
-				<div>
-					<button onClick={() => selectSong(song)}>Select</button>
-				</div>
-			);
-		}
+	  render() {
+	    const {song, selectSong} = this.props;
+	    return (
+	      <div>
+	        <button onClick={() => selectSong(song)}>Select</button>
+	      </div>
+	    );
+	  }
 	}
-	
+		
 	// Function selectSong added as mapDispatchToProps as second parameter.
 	export default connect(
-	    null,
-	    {selectSong}
+	  null,
+	  {selectSong}
 	)(SongComponent);
 	```
 
@@ -917,7 +918,7 @@ npm install --save redux react-redux
 	- redux-thunk __-->__ Middleware to help us make request in a redux application
 
 ### What is Middleware Doing?
-Asynchronous Action Creator: Takes some amount of time for it get its data ready to go
+__Asynchronous Action Creator:__ Takes some amount of time for it get its data ready to go
 
 #### Redux cycle with middleware :
 ![ReduxCycleWithMiddleware](ReactNoteImages/04_ReduxCycleWithMiddleware.png)
@@ -1080,23 +1081,23 @@ import React from 'react';
 import {BrowserRouter, Route} from "react-router-dom";
 
 const PageOne = () => {
-    return <div>Page One</div>;
+  return <div>Page One</div>;
 };
 
 const PageTwo = () => {
-    return <div>Page Two</div>;
+  return <div>Page Two</div>;
 };
 
 
 const App = () => {
-	return (
-		<BrowserRouter>
-			<div>
-				<Route path='/' exact component={PageOne}/>
-				<Route path='/pagetwo' component={PageTwo}/>
-			</div>
-		</BrowserRouter>
-	);
+  return (
+    <BrowserRouter>
+      <div>
+        <Route path='/' exact component={PageOne}/>
+        <Route path='/pagetwo' component={PageTwo}/>
+      </div>
+    </BrowserRouter>
+  );
 };
 
 export default App;
@@ -1143,54 +1144,52 @@ Only `/`
 	import React from "react";
 		
 	class GoogleAuth extends React.Component {
-		state = {isSignedIn: null}
-			
-		componentDidMount() {
-			window.gapi.load('client:auth2', () => {
-				window.gapi.client.init({
-					clientId: 'YOUR_CLIENT_ID_FOR_AUTH',
-					scope: 'email'
-				}).then(() => {
-					this.auth = window.gapi.auth2.getAuthInstance();
-					this.setState({isSignedIn: this.auth.isSignedIn.get()})
-					this.auth.isSignedIn.listen(() => {
-						this.setState({isSignedIn: this.auth.isSignedIn.get()})
-					})
-				})
-			});
-		}
-			
-		onSignInClicked = () => {
-			this.auth.signIn();
-		}
-			
-		onSignOutClicked = () => {
-			this.auth.signOut();
-		}
-			
-		renderAuthButton() {
-			if (this.state.isSignedIn === null) {
-				return null;
-			} else if (this.state.isSignedIn) {
-				return (
-					<button onClick={this.onSingInClicked} className='ui red google button'>
-						<i className='google icon'/>
-						Sign Out
-					</button>
-				);
-			} else {
-				return (
-					<button onClick={this.onSignOutClicked} className='ui red google button'>
-						<i className='google icon'/>
-						Sign In With Google
-					</button>
-				);
-			}
-		}
-			
-		render() {
-			return this.renderAuthButton();
-		}
+	  state = {isSignedIn: null}
+	  
+	  componentDidMount() {
+	    window.gapi.load('client:auth2', () => {
+	      window.gapi.client.init({
+	        clientId: 'YOUR_CLIENT_ID_FOR_AUTH',
+	        scope: 'email'
+	      }).then(() => {
+	        this.auth = window.gapi.auth2.getAuthInstance();
+	        this.setState({isSignedIn: this.auth.isSignedIn.get()})
+	        this.auth.isSignedIn.listen(() => {
+	          this.setState({isSignedIn: this.auth.isSignedIn.get()})
+	        })
+	      })
+	    });
+	  }
+	  
+	  onSignInClicked = () => {
+	    this.auth.signIn();
+	  }
+	  
+	  onSignOutClicked = () => {
+	    this.auth.signOut();
+	  }
+	  
+	  renderAuthButton() {
+	    if (this.state.isSignedIn === null) {
+	      return null;
+	    } else if (this.state.isSignedIn) {
+	      return (
+	        <button onClick={this.onSingInClicked} className='ui red google button'>
+	          <i className='google icon'/> Sign Out
+	        </button>
+	      );
+	    } else {
+	      return (
+	        <button onClick={this.onSignOutClicked} className='ui red google button'>
+	          <i className='google icon'/> Sign In With Google
+	        </button>
+	      );
+	    }
+	  }
+	  
+	  render() {
+	    return this.renderAuthButton();
+	  }
 	}
 	
 	export default GoogleAuth;
@@ -1232,16 +1231,16 @@ Only `/`
 	![16_HandlingInputswithReduxForm](ReactNoteImages/16_HandlingInputswithReduxForm.png)
 
 - To use redux form 
-	- First need to import redux-form reducer with specific name `form` into reducers:
+	- First need to put redux-form `reducer` with specific name `form` into reducers:
 
 		```javascript
 		import {combineReducers} from 'redux';
 		import {reducer as formReducer} from 'react-form';
 		
 		export default combineReducers({
-			// Other Reducers....
-			form: formReducer,
-			//... Some Other Reducers....
+		  // Other Reducers....
+		  form: formReducer,
+		  //... Some Other Reducers....
 		})
 		```
 		
@@ -1252,13 +1251,13 @@ Only `/`
 		import {Field, reduxForm} from "redux-form";
 		
 		class MyComponent extends Component {
-			render() {
-				return <div> Will Be Form...</div>;
-			}
+		  render() {
+		    return <div> Will Be Form...</div>;
+		  }
 		}
 			
 		export default reduxForm({
-			form: 'GiveANameForYourForm'
+		  form: 'GiveANameForYourForm'
 		})(MyComponent);
 		```
 		
@@ -1269,26 +1268,26 @@ Only `/`
 	import {Field, reduxForm} from "redux-form";
 		
 	class MyComponent extends Component {
-		renderInput(fieldProps) {
-			return (
-				<input
-					onChange={fieldProps.input.onChange}
-					value={fieldProps.input.value}
-				/>
-			);
-		}
-			
-		render() {
-			return (
-				<form>
-					<Field name='title' component={this.renderInput}/>
-				</form>
-			);
-		}
+	  renderInput(fieldProps) {
+	    return (
+	      <input
+	        onChange={fieldProps.input.onChange}
+	        value={fieldProps.input.value}
+	      />
+	    );
+	  }
+	  
+	  render() {
+	    return (
+	      <form>
+	        <Field name='title' component={this.renderInput}/>
+	      </form>
+	    );
+	  }
 	}
 		
 	export default reduxForm({
-		form: 'myComponentForm'
+	  form: 'myComponentForm'
 	})(MyComponent);
 	```
 	
@@ -1351,50 +1350,50 @@ Only `/`
 	import {Field, reduxForm} from "redux-form";
 	
 	class MyComponent extends Component {
-		onSubmit(formValues) {
-			console.log('Submitted:', formValues);
-		}
-		
-		renderError = (meta) => {
-			const {error, touched} = meta;
-			if (touched && error) {
-				return (
-					<div>{error}</div>
-				);
-			}
-		}
-		
-		renderInput = ({input, label, meta}) => {
-			return (
-				<div>
-					<label htmlFor={input.name}>{label} : </label>
-					<input id={input.name} {...input} autoComplete='off'/>
-					{this.renderError(meta)}
-				</div>
-			);
-		}
-		
-		render() {
-			return (
-				<form onSubmit={this.props.handleSubmit(this.onSubmit)}>
-					<Field name='myField' component={this.renderInput} label='Enter Value'/>
-					<button type="submit">Submit</button>
-				</form>
-			);
-		}
+	  onSubmit(formValues) {
+	    console.log('Submitted:', formValues);
+	  }
+	  
+	  renderError = (meta) => {
+	    const {error, touched} = meta;
+	    if (touched && error) {
+	      return (
+	        <div>{error}</div>
+	      );
+	    }
+	  }
+	  
+	  renderInput = ({input, label, meta}) => {
+	    return (
+	      <div>
+	        <label htmlFor={input.name}>{label} : </label>
+	        <input id={input.name} {...input} autoComplete='off'/>
+	        {this.renderError(meta)}
+	      </div>
+	    );
+	  }
+	  
+	  render() {
+	    return (
+	      <form onSubmit={this.props.handleSubmit(this.onSubmit)}>
+	        <Field name='myField' component={this.renderInput} label='Enter Value'/>
+	        <button type="submit">Submit</button>
+	      </form>
+	    );
+	  }
 	}
 	
 	const validate = (formValues) => {
-		const errors = {};
-		if (!formValues.myField) {
-			errors.myField = 'You must enter a myField value';
-		}
-		return errors;
+	  const errors = {};
+	  if (!formValues.myField) {
+	    errors.myField = 'You must enter a myField value';
+	  }
+	  return errors;
 	}
 	
 	export default reduxForm({
-		form: 'MyComponentForm',
-		validate: validate
+	  form: 'MyComponentForm',
+	  validate: validate
 	})(MyComponent);
 	```
 	
@@ -1404,18 +1403,18 @@ Only `/`
 	
 	```javascript
 	export default (state = [], action) => {
-		switch (action.types) {
-			case actionTypes.EDIT_STREAM:
-				return state.map(stream => {
-					if (stream.id === action.payload.id) {
-						return action.payload;
-					} else {
-						return stream;
-					}
-				})
-			default:
-				return state;
-		}
+	  switch (action.types) {
+	    case actionTypes.EDIT_STREAM:
+	      return state.map(stream => {
+	        if (stream.id === action.payload.id) {
+	          return action.payload;
+	        } else {
+	          return stream;
+	        }
+	      })
+	    default:
+	      return state;
+	  }
 	};
 	```
 
@@ -1423,17 +1422,17 @@ Only `/`
 
 	```javascript
 	export default (state = [], action) => {
-		switch (action.types) {
-			case actionTypes.EDIT_STREAM:
-				// const newState = {...state};
-				// newState[action.payload.id] = action.payload:
-				// return newState;
-				
-				// OR Same with new ES2015 crazy syntax:
-				return {...state, [action.payload.id]: action.payload};
-			default:
-				return state;
-		}
+	  switch (action.types) {
+	    case actionTypes.EDIT_STREAM:
+	      // const newState = {...state};
+	      // newState[action.payload.id] = action.payload:
+	      // return newState;
+		
+	      // OR Same with new ES2015 crazy syntax:
+	      return {...state, [action.payload.id]: action.payload};
+	    default:
+	      return state;
+	  }
 	};
 	```
 	
@@ -1593,35 +1592,35 @@ Only `/`
 	import StreamForm from "./StreamForm";
 
 	class StreamEdit extends Component {
-	    componentDidMount() {
-	        this.streamId = this.props.match.params.id
-	        this.props.fetchStream(this.streamId);
-	    }
-	
-	    onSubmit = (formValues) => {
-	        this.props.editStream(this.streamId, formValues);
-	    }
-	
-	    render() {
-	        return (
-	            <div>
-	                <h3>Edit a Stream</h3>
-	                <StreamForm
-	                    onSubmit={this.onSubmit}
-	                    initialValues={this.props.stream}  //Initial Values Usage
-	                />
-	            </div>
-	        );
-	    }
+	  componentDidMount() {
+	    this.streamId = this.props.match.params.id;
+	    this.props.fetchStream(this.streamId);
+	  }
+	  
+	  onSubmit = (formValues) => {
+	    this.props.editStream(this.streamId, formValues);
+	  }
+	  
+	  render() {
+	    return (
+	      <div>
+	        <h3>Edit a Stream</h3>
+	        <StreamForm 
+	          onSubmit={this.onSubmit}
+	          initialValues={this.props.stream}  //Initial Values Usage
+	        />
+	      </div>
+	    );
+	  }
 	}
 	
 	const mapStateToProps = (state, ownProps) => {
-	    return {stream: state.streams[ownProps.match.params.id]}
+	  return {stream: state.streams[ownProps.match.params.id]}
 	}
 	
 	export default connect(
-	    mapStateToProps,
-	    {fetchStream, editStream}
+	  mapStateToProps,
+	  {fetchStream, editStream}
 	)(StreamEdit);
 	```
 
@@ -1649,20 +1648,16 @@ Only `/`
 	
 		```javascript
 		const Modal = props => {
-			return ReactDOM.createPortal(
-				<div onClick={props.onDismiss} className='ui dimmer modals visible active'>
-					<div onClick={e => e.stopPropagation()} className='ui standard modal visible active'>
-						<div className='header'>{props.title}</div>
-						<div className='content'>
-							{props.content}
-						</div>
-						<div className='actions'>
-							{props.actions}
-						</div>
-					</div>
-				</div>,
-				document.getElementById('modal')
-			);
+		  return ReactDOM.createPortal(
+		    <div onClick={props.onDismiss} className='ui dimmer modals visible active'>
+		      <div onClick={e => e.stopPropagation()} className='ui standard modal visible active'>
+		        <div className='header'>{props.title}</div>
+		        <div className='content'>{props.content}</div>
+		        <div className='actions'>{props.actions}</div>
+		      </div>
+		    </div>,
+		    document.getElementById('modal')
+		  );
 		}
 		
 		export default Modal;
@@ -1748,7 +1743,7 @@ Only `/`
 		export default Field;
 		```
 		
-		- __There are two ways exist for assign `contextType ` :__ 
+		- __There are two ways exist for assign `contextType` :__ 
 		
 			```javascript
 			import ANY_CONTEXT from "../contexts/ANY_CONTEXT";
@@ -1798,7 +1793,7 @@ Only `/`
 
 	```javascript
 	<Context.Provider value={newValue}>
-		<Compoent/>
+	  <Compoent/>
 	</Context.Provider>
 	```
 	
@@ -1817,9 +1812,9 @@ Only `/`
 	
 	```javascript
 	<LanguageContext.Provider value={this.state.language}>
-		<ColorContext.Provider value='red'>
-			<UserCreate/>
-		</ColorContext.Provider>
+	  <ColorContext.Provider value='red'>
+	    <UserCreate/>
+	  </ColorContext.Provider>
 	</LanguageContext.Provider>
 	```
 	
@@ -1828,13 +1823,13 @@ Only `/`
 	```javascript
 	return (
 		<ColorContext.Consumer>
-			{(color) =>
-				<button className={`ui button ${color}`}>
-					<LanguageContext.Consumer>
-						{(value) => value === 'ENGLISH' ? 'Submit' : 'Voorlagen'}
-					</LanguageContext.Consumer>
-				</button>
-			}
+		  {(color) =>
+		    <button className={`ui button ${color}`}>
+		      <LanguageContext.Consumer>
+		        {(value) => value === 'ENGLISH' ? 'Submit' : 'Voorlagen'}
+		      </LanguageContext.Consumer>
+		    </button>
+		  }
 		</ColorContext.Consumer>
 	)
 	```
@@ -1852,23 +1847,23 @@ Only `/`
 	
 		```javascript
 		import React, {Component} from 'react';
-		
+			
 		const Context = React.createContext('ENGLISH');
 			
 		export class LanguageStore extends Component {
-			state = {language: 'english'};
-				
-			onLanguageChange = (language) => {
-				this.setState({language})
-			}
+		  state = {language: 'english'};
 			
-			render() {
-				return (
-					<Context.Provider value={{...this.state, onLanguageChange: this.onLanguageChange}}>
-						{this.props.children}
-					</Context.Provider>
-				);
-			}
+		  onLanguageChange = (language) => {
+		    this.setState({language})
+		  }
+			
+		  render() {
+		    return (
+		      <Context.Provider value={{...this.state, onLanguageChange: this.onLanguageChange}}>
+		        {this.props.children}
+		      </Context.Provider>
+		    );
+		  }
 		}
 			
 		export default Context;
@@ -1878,12 +1873,31 @@ Only `/`
 		
 		```javascript
 		<LanguageStore>
-			<LanguageSelector/>
-			<UserCreate/>
+		  <LanguageSelector/>
+		  // Other components....
 		</LanguageStore>
 		```
+		
+	- Usage is the same with normal context:
 	
-	- Usage is the same with normal context.
+		```javascript
+		import React, {Component} from "react";
+		import LanguageContext from '../contexts/LanguageContext'
+		
+		class LanguageSelector extends Component {
+		  static contextType = LanguageContext;
+		  render() {
+		    return (
+		      <div> Select language:
+		        <i className='flag us' onClick={() => this.context.onLanguageChange('ENGLISH')}/>
+		        <i className='flag nl' onClick={() => this.context.onLanguageChange('DUTCH')}/>
+		      </div>
+		    );
+		  }
+		}
+		
+		export default LanguageSelector;
+		```
 
 ## [EXTRA CONTENT] Hooks with Functional Components
 - Hook System
