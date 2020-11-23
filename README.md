@@ -649,6 +649,274 @@ export default ImageCard;
 ```
 
 ## Section 12: Understanding Hooks in React
+Hooks are a way to write reusable code, instead of more classic techniques like inheritance.
+
+| Name                  | Goal           | 
+|-----------------------|----------------|
+| __useState__          | Function that lets you use __state__ in a functional component |
+| __useEffect__         | Function that lets you use something like __lifecycle methods__ in a functional component.   |
+| __useRef__            | Function that lets you create a __ref__ in a function component |
+
+#### Primitive Hooks
+These are the primitive hooks:
+
+- useState
+- useEffect
+- useRef
+- useReducer
+- useContext
+- useCallback
+- useMemo
+- useImperativeHandle 
+- useLayoutEffect
+- useDebugValue
+
+#### `useState` Hook : 
+
+- __Function:__ `const [<currentValue>, <setCurrentValue>] = useState(<initialValue>);`
+	- `currentValue` : contains the present value of the piece of state (same as the `this.state.someState`)
+	- `setCurrentValue` : Function to call when we want to update our state (and rerender) (same as the `this.setState({<someState>})`)
+	- `initialValue` : Starting value for this piece of state, similar to when we initialized our state object
+
+- Example of converting a class-based component to functional based component with useState hook:
+
+	- Class based:
+		
+		```javascript
+		import React, {Component} from "react";
+			
+		export default class App extends Component {
+		  state = {resource: 'posts'};
+			
+		  render() {
+		    return (
+		      <div>
+		        <button onClick={() => this.setState({resource: 'Posts'})}>Posts</button>
+		        <button onClick={() => this.setState({resource: 'Todos'})}>Todos</button>
+		        {this.state.resource}
+		      </div>
+		    );
+		  }
+		};
+		```
+		
+	- Funtional based:
+		
+		```javascript
+		import React, {useState} from "react";
+
+		const App = () => {
+		  const [resource, setResource] = useState('posts')
+		  return (
+		    <div>
+		      <button onClick={() => setResource('posts')}>Posts</button>
+		      <button onClick={() => setResource('todos')}>Todos</button>
+		      {resource}
+		    </div>
+		  );
+		};
+		
+		export default App;
+		```
+		
+- `useState` keeps single value instead of whole state! To use more than one state, needs to use useState more than one.
+
+	```javascript
+	// in Class-based
+	state = {
+	  resource: 'posts',
+	  count: 0
+	}
+	
+	// in Functional-based use seperate states:
+	const [resource, setResource] = useState('posts')
+	const [count, setCount] = useState(0)
+	```
+	
+#### `useEffect` Hook : 
+- __Function:__ `useEffect(effect: EffectCallback, deps?: DependencyList): void;` 
+- Allows function components to use __something like__ (not exact same) lifecycle methods.
+- `useEffect` Hook can be configurable as one of given three scenarios: 
+	1. When the component is rendered __for the first time__.<br/>
+	2. When the component is rendered __for the first time__ and __whenever it rerenders__.
+	3. When the component is rendered __for the first time__ and __whenever it rerenders for some piece of data changes__.
+- Given above configuration can be done with second argument(__`deps?: DependencyList`__) of the useEffect function:
+	
+	| __`deps?: DependencyList`__ | Configuration         | 
+	|-----------------------------|-----------------------|
+	| []                          | Run at initial render |
+	| ...nothing...               | 1. Run at initial render. <br/> 2. Run after every single rerender |
+	| [data]                      | 1. Run at initial render <br/> 2. Run after every rerender if given `data` has changed since with that last render |
+	
+- Example of `useEffect`:
+	
+	```javascript
+	import React, {useEffect, useState} from "react";
+	import axios from 'axios';
+	
+	const ResourceList = ({resource}) => {
+	  const [resources, setResources] = useState([]);
+  
+	  useEffect(() => {
+	    const fetchResources = async (resource) => {
+	      const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
+	      setResources(response.data);
+	    }
+	    fetchResources(resource);
+	  }, [resource]);
+	  
+	  return <div>{resources.length}</div>;
+	}
+	
+	export default ResourceList;
+	```
+	
+#### `useRef` Hook : 
+- __Function:__ `function useRef<T = undefined>(): MutableRefObject<T | undefined>;` 
+- It creates a document reference for us. And usage example given below:
+
+	```javascript
+	const [isOpen, setOpen] = useState(false);
+	const ref = useRef();
+	
+	useEffect(() => {
+		document.body.addEventListener('click', (event) => {
+			if (!ref.current.contains(event.target)) {
+				setOpen(false);
+			}
+		});
+	}, []);
+	
+	return (
+        <div className='ui form' ref={ref}>
+            ...
+        </div>
+    );
+    
+	```
+	
+### NOTES:
+- If you want to make __async__ calls in `useEffect`, there are 3 ways available: 
+
+	1. With creating an __async__ function inside `useEffect` and call it after creating the function again inside `useEffect`:
+
+		```javascript
+		useEffect(() => {
+		  const fetchResources = async (resource) => {
+		    const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
+		    setResources(response.data);
+		  }
+		  fetchResources(resource);
+		}, [resource]);
+		```
+	2. With creating __self-invoking__ function
+
+		```javascript
+		useEffect(() => {
+		  (async () => {
+		    const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
+		    setResources(response.data);
+		  })();
+		}, [resource]);
+		```
+		
+	3. With __promises__:
+		
+		```javascript
+		useEffect(() => {
+		  axios.get(`https://jsonplaceholder.typicode.com/${resource}`)
+		    .then(response => {
+		      setResources(response.data);
+		    })
+		}, [resource]);
+		```
+		
+- __IMPORTANT NOTE:__ `useEffect()` function can return a cleanup function as well. That function called __just before useEffect called again for rerender__ or __when the component removed from screen totaly__.
+
+	- Simple example:
+	
+		```javascript
+		useEffect(() => {
+		  console.log('Initial render or term was changed');
+		  return () => {
+		    console.log('CLEANUP');
+		  }
+		}, [term]);
+		```
+		
+	- Real example from project __12_widgets__
+	
+		```javascript
+		useEffect(() => {
+		   const search = async () => {
+		      const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
+		         params: {
+		           action: 'query', list: 'search', origin: '*', format: 'json', srsearch: searchTerm
+		         }
+		      });
+		      setResults(data?.query?.search ? data.query?.search : []);
+		   }
+		  
+		   if (searchTerm && !results.length) { // First time rendering
+		      search();
+		   } else { // searchTerm changings...
+		      const timeoutId  = setTimeout(() => {
+		         if (searchTerm) {
+		            search();
+		         }
+		      }, 500);
+		    
+		      return () => {
+		         clearTimeout(timeoutId);
+		      }
+		   }
+		}, [searchTerm]);
+		```
+		
+	- How it is working:
+		
+		![Sec12_01_howUseEffectWorkingWithCleanFunction](ReactNoteImages/Sec12_01_howUseEffectWorkingWithCleanFunction.png)
+	
+- Separate useEffect and useState hooks, which are making a request to an api, from the actual code :
+
+	```javascript
+	import {useEffect, useState} from "react";
+	import axios from "axios";
+	
+	const useResources = (resource) => {
+	    const [resources, setResources] = useState([]);
+	
+	    const fetchResources = async (resource) => {
+	        const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
+	        setResources(response.data);
+	    }
+	
+	    useEffect(() => {
+	        fetchResources(resource);
+	    }, [resource]);
+	
+	    return resources;
+	};
+	
+	export default useResources;
+	``` 
+	
+	__and usage in a component__
+	
+	```javascript
+	import React from "react";
+	import useResources from "./useResources";
+	
+	const ResourceList = ({resource}) => {
+	    const resources = useResources(resource);
+	    return <ul>
+	        {resources.map(record => <li key={record.id}>{record.title}</li>)}
+	    </ul>;
+	}
+	
+	export default ResourceList;
+	``` 
+	
 ## Section 13: Navigation From Scratch
 ## Section 14: Hooks in Practice
 ## Section 15: Deploying a React App
@@ -1743,31 +2011,46 @@ Only `/`
 		export default Field;
 		```
 		
-		- __There are two ways exist for assign `contextType` :__ 
+		- __There are two ways exist for assign `contextType` in class base component :__ 
 		
-			```javascript
-			import ANY_CONTEXT from "../contexts/ANY_CONTEXT";
+		    - Using `Field.contextType` : 
+		
+                ```javascript
+                import ANY_CONTEXT from "../contexts/ANY_CONTEXT";
+                
+                class Field extends Component {
+                    // Some code
+                }
+                
+                Field.contextType = ANY_CONTEXT;
+                ```
 			
-			class Field extends Component {
-			    // Some code
+			- __or__ using `static contextType = ANY_CONTEXT`:
+			
+				```javascript
+				import ANY_CONTEXT from "../contexts/ANY_CONTEXT";
+				    
+				class Field extends Component {
+				    static contextType = ANY_CONTEXT
+				    
+				    // OTHER CODES...
+				}
+				```
+			
+		- __Also functional component can use that context with using `useContext(ANY_CONTEXT)` hook__:
+
+        	```javascript
+			const Field = props => {
+				const anyContext = useContext(ANY_CONTEXT)
+				return(
+					<div>
+						...anyContext.VARIABLE_OF_CONTEXT...
+					</div>
+				)
 			}
+			export default Field
+	       ``` 
 			
-			Field.contextType = ANY_CONTEXT;
-			```
-			
-			__or__
-			
-			
-			```javascript
-			import ANY_CONTEXT from "../contexts/ANY_CONTEXT";
-			
-			class Field extends Component {
-			    static contextType = ANY_CONTEXT
-			    
-			    // OTHER CODES...
-			}
-			
-			```
 	- Second Way - Using `Context.Consumer` :
 		
 		```javascript
@@ -1899,166 +2182,6 @@ Only `/`
 		export default LanguageSelector;
 		```
 
-## [EXTRA CONTENT] Hooks with Functional Components
-- Hook System
-
-	| Name                  | Goal           | 
-	|-----------------------|----------------|
-	| __useState__          | Allow a functional component to use component-level state |
-	| __useEffect__         | Allow a functional component to use `lifecycle methods`   |
-	| __useContext__        | Allow a functional component to use the context system    |
-	| __useRef__            | Allow a functional component to use the ref system        |
-
-- Converting a class-based component to functional based component with hooks system:
-
-	- Class based:
-		
-		```javascript
-		import React, {Component} from "react";
-		
-		export default class App extends Component {
-		    state = {resource: 'posts'};
-		
-		    render() {
-		        return (
-		            <div>
-		                <div>
-		                    <button onClick={() => this.setState({resource: 'Posts'})}>Posts</button>
-		                    <button onClick={() => this.setState({resource: 'Todos'})}>Todos</button>
-		                </div>
-		                {this.state.resource}
-		            </div>
-		        );
-		    }
-		};
-		```
-		
-	- Funtional based:
-		
-		```javascript
-		import React, {useState} from "react";
-
-		const App = () => {
-		    const [resource, setResource] = useState('posts')
-		    return (
-		        <div>
-		            <div>
-		                <button onClick={() => setResource('posts')}>Posts</button>
-		                <button onClick={() => setResource('todos')}>Todos</button>
-		            </div>
-		            {resource}
-		        </div>
-		    );
-		};
-		
-		export default App;
-		```
-- __useState hook__ : `const [<currentValue>, <setCurrentValue>] = useState(<initialValue>);`
-	- `useState` : Function from React
-	- `currentValue` : contains the present value of the piece of state (same as the `this.state.SomeState`)
-	- `setCurrentValue` : Function to call when we want to update our state (and rerender) (same as the `this.setState({<SomeStates>})`)
-	- `initialValue` : Starting value for this piece of state, similar to when we initialized our state object
-
-- `useState` keeps single value instead of whole state!!! To use more than one state, needs to use useState more than one.
-
-	```javascript
-	// in Class-based
-	state = {
-		resource: 'posts',
-		count: 0
-	}
-	
-	// in Functional-based
-	const [resource, setResource] = useState('posts')
-	const [count, setCount] = useState(0)
-	```
-- __useEffect hook__ : `useEffect(effect: EffectCallback, deps?: DependencyList): void;` 
-	
-	![29_useEffect.png](ReactNoteImages/29_useEffect.png)
-	
-	- if you dont put any `DependencyList`, `aFunction` gonna call recursively itself until user left the page!
-		
-		```
-		useEffect(() => aFunction())
-		```
-		
-	- if you put an empty array as `DependencyList`, `aFunction` gonna call itself just one time like `componentDidMount`.
-		
-		```
-		useEffect(() => aFunction(), [])
-		```
-		
-	- if you put one or more elements as array to `DependencyList`, `aFunction` gonna call itself when just given dependencies are changed. 		
-
-		```
-		useEffect(() => aFunction(), [someDependency])
-		```
-		
-	- Example of `useEffect`:
-		
-		```javascript
-		import React, {useEffect, useState} from "react";
-		import axios from 'axios';
-		
-		const ResourceList = ({resource}) => {
-		    const [resources, setResources] = useState([]);
-		
-		    const fetchResources = async (resource) => {
-		        const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
-		        setResources(response.data);
-		    }
-		
-		    useEffect(() => {
-		        fetchResources(resource);
-		    }, [resource]);
-		
-		    return <div>{resources.length}</div>;
-		}
-		
-		export default ResourceList;
-		```
-		
-- Separate hooks from the actual code :
-
-	```javascript
-	import {useEffect, useState} from "react";
-	import axios from "axios";
-	
-	const useResources = (resource) => {
-	    const [resources, setResources] = useState([]);
-	
-	    const fetchResources = async (resource) => {
-	        const response = await axios.get(`https://jsonplaceholder.typicode.com/${resource}`);
-	        setResources(response.data);
-	    }
-	
-	    useEffect(() => {
-	        fetchResources(resource);
-	    }, [resource]);
-	
-	    return resources;
-	};
-	
-	export default useResources;
-	``` 
-	
-	__and usage in a component__
-	
-	```javascript
-	import React from "react";
-	import useResources from "./useResources";
-	
-	const ResourceList = ({resource}) => {
-	    const resources = useResources(resource);
-	    return <ul>
-	        {resources.map(record => <li key={record.id}>{record.title}</li>)}
-	    </ul>;
-	}
-	
-	export default ResourceList;
-	``` 
-		
-		
 ## COURSE PROJECTS
 
 | Sections                  | Projects         | 
@@ -2068,8 +2191,7 @@ Only `/`
 | 4 5 6                     | 04_seasons       |
 | 7 8 9 10                  | 07_pics          |
 | 11                        | 11_videos        |
-| 12                        |                  |
-| 13                        |                  |
+| 12, 13                    | 12_widgets       |
 | 14                        |                  |
 | 15                        |                  |
 | 17                        | 17_songs         |
@@ -2097,7 +2219,7 @@ Only `/`
 	- Generally used with `_` (__underscore__)
 	- `_.memoize(func, [resolver])` : Creates a function that memoizes the result of func. If resolver is provided, it determines the cache key for storing the result based on the arguments provided to the memoized function. By default, the first argument provided to the memoized function is used as the map cache key. The func is invoked with the this binding of the memoized function.
 
-- [__Json Server__](https://www.npmjs.com/package/json-server) : Get a full fake REST API with zero coding in less than 30 seconds. Simple example steps: 
+- [__Json Server__](https://www.npmjs.com/package/json-server): Get a full fake REST API with zero coding in less than 30 seconds. Simple example steps: 
 	- create directory with any name
 	- run `npm init` and enter enter enter without give any thing...
 	- install json-server `npm install --save json-server`
@@ -2131,10 +2253,12 @@ Only `/`
 		```
 	- Run `npm start`
 
-- [Node Media Server](https://github.com/illuspas/Node-Media-Server) : A Node.js implementation of RTMP/HTTP-FLV/WS-FLV/HLS/DASH Media Server
-- [OBS Studio](https://obsproject.com/) : Free and open source software for video recording and live streaming.
+- [__Pose Animation Library__](https://popmotion.io/pose/): A truly simple animation library for React, React Native, and Vue. 
+- [React Lifecycle](https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/): Displays react lifecycle as diagram.
+- [Node Media Server](https://github.com/illuspas/Node-Media-Server): A Node.js implementation of RTMP/HTTP-FLV/WS-FLV/HLS/DASH Media Server
+- [OBS Studio](https://obsproject.com/): Free and open source software for video recording and live streaming.
 - `npm install --save flv.js` : FLV Player library : This module offers Encoder and Decoder stream classes for working with FLV media files.
-- Array destructing: 
+- Array destructing example: 
 
 	```javascript
 	const myArray = [1,3,5];
@@ -2144,3 +2268,43 @@ Only `/`
 	console.log(myNum2); // It will print 3
 	console.log(myNum3); // It will print 5
  	```
+- Javascript __self-invoking__ functions:
+	
+	```javascript
+	(() => {
+	  var x = "Hello!!";  // I will invoke myself
+	})();
+	```
+- Advance using of calling and API with some parameter with useEffect (In the example calling wikipedia search api with given searchTerm without any warning in console, with first time loading without any wait, and giving user to 1000milisecond for finishing his/her typing):
+
+	```javascript
+	const [searchTerm, setSearchTerm] = useState('programming');
+	const [debouncingSearchTerm, setDebouncingSearchTerm] = useState(searchTerm);
+	const [results, setResults] = useState([]);
+	
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			setDebouncingSearchTerm(searchTerm);
+		}, 500);
+		
+		return () => {
+			clearTimeout(timeoutId);
+		}
+	}, [searchTerm]);
+	
+	useEffect(() => {
+		const search = async () => {
+			const {data} = await axios.get('https://en.wikipedia.org/w/api.php', {
+				params: {
+					action: 'query',
+					list: 'search',
+					origin: '*',
+					format: 'json',
+					srsearch: debouncingSearchTerm
+				}
+			});
+			setResults(data?.query?.search ? data.query?.search : []);
+		}
+		search();
+	}, [debouncingSearchTerm]);
+	```
