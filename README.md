@@ -291,7 +291,7 @@ getSnapshotBeforeUpdate()
 		}
 		```
 
-- __IMPORTANT !!__ -> `setState()` method is not changing whole state object. It is an additive method. It is just changing which we gave:
+- __IMPORTANT !!__ -> `setState()` method is __NOT__ changing whole state object. It is an additive method. It is just changing which we gave:
 
 	```javascript
 	class App extends React.Component {
@@ -918,6 +918,56 @@ These are the primitive hooks:
 	``` 
 	
 ## Section 13: Navigation From Scratch
+- Manually builded basic `Router` component;
+
+	```javascript
+	import {useEffect, useState} from "react";
+	
+	const Route = ({path, children}) => {
+	    const [currentPath, setCurrentPath] = useState(window.location.pathname);
+	    useEffect(() => {
+	        const onHandsomeRouteEventListener = (event) => {
+	            setCurrentPath(window.location.pathname);
+	        }
+	        window.addEventListener('our_handsome_route_event', onHandsomeRouteEventListener, true);
+	
+	        return () => {
+	            window.removeEventListener('our_handsome_route_event', onHandsomeRouteEventListener, true);
+	        };
+	    }, []);
+	
+	    return path === currentPath ? children : null;
+	};
+	
+	
+	export default Route;
+	```
+
+- Manually builded basic `Link` component
+
+	```javascript
+	import React from 'react';
+	
+	const Link = ({href, children, className}) => {
+	    const onClick = (event) => {
+	        if (event.metaKey || event.ctrlKey) {
+	            return;
+	        }
+	        event.preventDefault();
+	        window.history.pushState({}, '', href);
+	
+	        const handsomeNavEvent = new PopStateEvent('our_handsome_route_event');
+	        window.dispatchEvent(handsomeNavEvent);
+	    };
+	
+	    return (
+	        <a onClick={onClick} href={href} className={className}>{children}</a>
+	    );
+	};
+	
+	export default Link;
+	```
+
 ## Section 14: Hooks in Practice
 ## Section 15: Deploying a React App
 

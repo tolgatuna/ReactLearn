@@ -10,11 +10,12 @@ const Dropdown = ({label, options, selected, onSelectChange}) => {
                 setOpen(false);
             }
         };
-        document.body.addEventListener('click', onBodyClick);
+
+        document.body.addEventListener('click', onBodyClick, true);
 
         return () => {
-            document.body.removeEventListener('click', onBodyClick);
-        }
+            document.body.removeEventListener('click', onBodyClick, true);
+        };
     }, []);
 
     const renderedOptions = () => (
