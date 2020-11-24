@@ -305,6 +305,19 @@ getSnapshotBeforeUpdate()
 	    // Other functions, render method...
 	}
 	```
+	
+- If still want to change two state, you can still change in one `this.setState`:
+	
+	```javascript
+	class App extends React.Component {
+	    state = {lat: null, err: 'ERROR'};
+	
+	    componentDidMount() {
+	        this.setState({lat: 52, err: 'ANOTHER_ERROR'});
+	    }
+	    // Other functions, render method...
+	}
+	```
 
 ## SECTION 7 - Handling User Input with Forms and Events
 ### Some events:
@@ -613,40 +626,40 @@ const images = props.images.map(({id, description, urls}) => {
 - Gives access to a single DOM element
 - We create refs in the constructor, assign them to instance variables, then pass to a particular JSX element as props
 
-Example:
-
-```javascript
-class ImageCard extends React.Component {
-    constructor(props) {
-        super(props);
-        // 1. Create a React ref
-        this.imageRef = React.createRef();
-    }
-
-    componentDidMount() {
-        this.imageRef.current.addEventListener('load', this.setSpan);
-    }
-
-    setSpan = () => {
-        let height = this.imageRef.current.clientHeight;
-        const spans = Math.ceil(height / 10) + 1;
-        this.setState({span: spans});
-    };
-
-    render() {
-        const {description, urls} = this.props.image;
-
-        return (
-            <div style={{gridRowEnd: `span ${this.state.span}`}}>
-                // 2. Put created ref to the object
-                <img ref={this.imageRef} alt={description} src={urls.regular}/>
-            </div>
-        );
-    }
-}
-
-export default ImageCard;
-```
+	Example:
+	
+	```javascript
+	class ImageCard extends React.Component {
+	    constructor(props) {
+	        super(props);
+	        // 1. Create a React ref
+	        this.imageRef = React.createRef();
+	    }
+	
+	    componentDidMount() {
+	        this.imageRef.current.addEventListener('load', this.setSpan);
+	    }
+	
+	    setSpan = () => {
+	        let height = this.imageRef.current.clientHeight;
+	        const spans = Math.ceil(height / 10) + 1;
+	        this.setState({span: spans});
+	    };
+	
+	    render() {
+	        const {description, urls} = this.props.image;
+	
+	        return (
+	            <div style={{gridRowEnd: `span ${this.state.span}`}}>
+	                // 2. Put created ref to the object
+	                <img ref={this.imageRef} alt={description} src={urls.regular}/>
+	            </div>
+	        );
+	    }
+	}
+	
+	export default ImageCard;
+	```
 
 ## Section 12: Understanding Hooks in React
 Hooks are a way to write reusable code, instead of more classic techniques like inheritance.
@@ -918,7 +931,7 @@ These are the primitive hooks:
 	``` 
 	
 ## Section 13: Navigation From Scratch
-- Manually builded basic `Router` component;
+- Manually builded basic `Route` component;
 
 	```javascript
 	import {useEffect, useState} from "react";
@@ -969,7 +982,52 @@ These are the primitive hooks:
 	```
 
 ## Section 14: Hooks in Practice
+### Custom Hooks
+
+- Best way to create reusable code in a React project (Besides components!)
+- Created by extracting hook-related code out of a function component
+- Custom hooks always made use of at least one primitive hook internally
+- Each custom hook should have one purpose
+- Kind of an art form!
+- Data-fetching is a great example to make a custom hook:
+
+	```javascript
+	import {useEffect, useState} from "react";
+	import {searchFromYoutube} from "../api/youtubeApi";
+	
+	const useVideos = (defaultSearchTerm) => {
+	    const [videos, setVideos] = useState([]);
+	    useEffect(() => {
+	        search(defaultSearchTerm);
+	    }, [defaultSearchTerm]);
+	
+	    const search = async (term) => {
+	        const response = await searchFromYoutube(term);
+	        setVideos(response.data.items);
+	    };
+	
+	    return [videos, search];
+	};
+	
+	export default useVideos;
+	```
+
 ## Section 15: Deploying a React App
+
+Easy and free deploy environments:
+
+- [Vercel](https://vercel.com/): 
+	
+	- Create an vercel account from web page.
+	- Install vercel cli: `npm install -g vercel`
+	- Login with vercel cli: `vercel login`
+	- Then run `vercel` in the project directory to deploy your application
+	- To deploy your changes again use `vercel --prod` command
+
+- [Netlify](netlify.com) :
+	
+	- Create an account and link with your github.
+	- Select your project which you want to deploy to Netlify 
 
 ## SECTION 16 - On We Go...To Redux!
 ### What is Redux?
@@ -2234,22 +2292,21 @@ Only `/`
 
 ## COURSE PROJECTS
 
-| Sections                  | Projects         | 
-|---------------------------|------------------|
-| 1 2                       | 01_helloworld    |
-| 3                         | 03_components    |
-| 4 5 6                     | 04_seasons       |
-| 7 8 9 10                  | 07_pics          |
-| 11                        | 11_videos        |
-| 12, 13                    | 12_widgets       |
-| 14                        |                  |
-| 15                        |                  |
-| 17                        | 17_songs         |
-| 18 19                     | 18_blog          |
-| 20 21 22 23 24 25 26      | 20_streams       |
-| 27 28                     | 27_translate     |
-| Extra                     | hooks_simple     |
-| Extra                     | seasons          |
+| Sections                  | Projects                                             | 
+|---------------------------|------------------------------------------------------|
+| 1 2                       | 01\_helloworld                                       |
+| 3                         | 03\_components                                       |
+| 4 5 6                     | 04\_seasons                                          |
+| 7 8 9 10                  | 07\_pics                                             |
+| 11                        | 11\_videos                                           |
+| 12, 13                    | 12\_widgets                                          |
+| 14, 15                    | 14\_videos-hook _(Hook version of 11\_videos)_       |
+| 17                        | 17\_songs                                            |
+| 18 19                     | 18\_blog                                             |
+| 20 21 22 23 24 25 26      | 20\_streams                                          |
+| 27 28                     | 27\_translate                                        |
+| Extra                     | hooks\_simple                                        |
+| Extra                     | seasons                                              |
 
 
 ## EXTRA INFORMATIONS
